@@ -85,11 +85,11 @@ class Game:
             return
         self._move_first_player = not self._move_first_player
         self._board.add_rock(index_y, index_x, self._move_first_player + 1)
-        for i in range(self._board.size):
-            for j in range(self._board.size):
-                print(self._board.game_field[i][j], end=' ')
-            print()
-        print("----------------------------")
+        #for i in range(self._board.size):
+            #for j in range(self._board.size):
+                #print(self._board.game_field[i][j], end=' ')
+            #print()
+        #print("----------------------------")
 
     # Обработка событий окна
     def _poll_events(self) -> None:
@@ -152,7 +152,6 @@ class Game:
                 self._computer_move()
                 self.draw(surface)
                 button.draw(surface)
-                print(self._board.get_group((3, 3)))
                 self._board.check_rules()
             pygame.display.update()
             clock.tick(60)

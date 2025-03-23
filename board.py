@@ -15,9 +15,28 @@ class Board:
         return self.__game_field
 
     def check_rules(self) -> None:
-        pass
+        for i in range(self._size):
+            for j in range(self._size):
+                group = self.get_group((i, j))
+                if group is None:
+                    continue
+                if self.has_void(group):
+                    continue
+                for cell in group:
+                    self.__game_field[cell[0]][cell[1]] = 0
 
-    def get_group(self, rock_coordinate: tuple[int, int]) -> list[tuple[int, int]]:
+
+    def has_void(self, group: list) -> bool:
+        for pos in group:
+            poses = [(pos[0] + 1, pos[1]), (pos[0] - 1, pos[1]), (pos[0], pos[1] + 1), (pos[0], pos[1] - 1)]
+            for new_pos in poses:
+                if new_pos[0] < 0 or new_pos[0] >= self._size or new_pos[1] < 0 or new_pos[1] >= self._size:
+                    continue
+                if self.__game_field[new_pos[0]][new_pos[1]] == 0:
+                    return True
+        return False
+
+    def get_group(self, rock_coordinate: tuple[int, int]) -> list[tuple[int, int]] | None:
         """
         Возвращает список координат клеток одной группы
         """
@@ -25,7 +44,7 @@ class Board:
         visited = set()
         player_id = self.__game_field[rock_coordinate[0]][rock_coordinate[1]]
         if player_id == 0:
-            return result
+            return None
         q = Queue()
         q.put(rock_coordinate)
         while not q.empty():
@@ -34,14 +53,12 @@ class Board:
                 continue
             visited.add(pos)
             result.append(pos)
-            if self.__game_field[pos[0] + 1][pos[1]] == player_id:
-                q.put((pos[0] + 1, pos[1]))
-            if self.__game_field[pos[0] - 1][pos[1]] == player_id:
-                q.put((pos[0] - 1, pos[1]))
-            if self.__game_field[pos[0]][pos[1] + 1] == player_id:
-                q.put((pos[0], pos[1] + 1))
-            if self.__game_field[pos[0]][pos[1] - 1] == player_id:
-                q.put((pos[0], pos[1] - 1))
+            poses = [(pos[0] + 1, pos[1]), (pos[0] - 1, pos[1]), (pos[0], pos[1] + 1), (pos[0], pos[1] - 1)]
+            for new_pos in poses:
+                if new_pos[0] < 0 or new_pos[0] >= self._size or new_pos[1] < 0 or new_pos[1] >= self._size:
+                    continue
+                if self.__game_field[new_pos[0]][new_pos[1]] == player_id:
+                    q.put((new_pos[0], new_pos[1]))
         return result
 
 
