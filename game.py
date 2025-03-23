@@ -1,7 +1,10 @@
 import random
 import pygame
+from pygame import Surface
+
 from board import Board
 from widgets.button import Button
+from widgets.text import Text
 
 
 class Game:
