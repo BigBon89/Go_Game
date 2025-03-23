@@ -1,7 +1,9 @@
 from queue import Queue
 
+
 class Board:
     """Класс отвечающий за доску"""
+
     def __init__(self, size: int) -> None:
         self._size = size  # Размер игрового поля
         self.__game_field = [[0] * self._size for _ in range(self._size)]  # Игровое поле
@@ -15,6 +17,10 @@ class Board:
         return self.__game_field
 
     def check_rules(self) -> None:
+        """
+        Проверяет правила игры
+        """
+
         for i in range(self._size):
             for j in range(self._size):
                 group = self.get_group((i, j))
@@ -25,8 +31,11 @@ class Board:
                 for cell in group:
                     self.__game_field[cell[0]][cell[1]] = 0
 
-
     def has_void(self, group: list) -> bool:
+        """
+        Проверяет есть ли пустые соседние клетки у группы камней
+        """
+
         for pos in group:
             poses = [(pos[0] + 1, pos[1]), (pos[0] - 1, pos[1]), (pos[0], pos[1] + 1), (pos[0], pos[1] - 1)]
             for new_pos in poses:
@@ -40,6 +49,7 @@ class Board:
         """
         Возвращает список координат клеток одной группы
         """
+
         result = []
         visited = set()
         player_id = self.__game_field[rock_coordinate[0]][rock_coordinate[1]]
@@ -60,7 +70,6 @@ class Board:
                 if self.__game_field[new_pos[0]][new_pos[1]] == player_id:
                     q.put((new_pos[0], new_pos[1]))
         return result
-
 
     def __getitem__(self, index: int) -> list:
         return self.__game_field[index]
