@@ -1,4 +1,6 @@
 import random
+from queue import Queue
+
 import pygame
 from pygame import Surface
 
@@ -22,6 +24,34 @@ class Board:
 
     def check_rules(self) -> None:
         pass
+
+    def get_group(self, rock_coordinate: tuple[int, int]) -> list[tuple[int, int]]:
+        """
+        Возвращает список координат клеток одной группы
+        """
+        result = []
+        visited = set()
+        player_id = self.__game_field[rock_coordinate[0]][rock_coordinate[1]]
+        if player_id == 0:
+            return result
+        q = Queue()
+        q.put(rock_coordinate)
+        while not q.empty():
+            pos = q.get()
+            if pos in visited:
+                continue
+            visited.add(pos)
+            result.append(pos)
+            if self.__game_field[pos[0] + 1][pos[1]] == player_id:
+                q.put((pos[0] + 1, pos[1]))
+            if self.__game_field[pos[0] - 1][pos[1]] == player_id:
+                q.put((pos[0] - 1, pos[1]))
+            if self.__game_field[pos[0]][pos[1] + 1] == player_id:
+                q.put((pos[0], pos[1] + 1))
+            if self.__game_field[pos[0]][pos[1] - 1] == player_id:
+                q.put((pos[0], pos[1] - 1))
+        return result
+
 
     def __getitem__(self, index: int) -> list:
         return self.__game_field[index]
@@ -179,6 +209,8 @@ class Game:
                 self._computer_move()
                 self.draw(surface)
                 button.draw(surface)
+                print(self._board.get_group((3, 3)))
+                self._board.check_rules()
             pygame.display.update()
             clock.tick(60)
 
