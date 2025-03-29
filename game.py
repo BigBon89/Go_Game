@@ -99,6 +99,18 @@ class Game:
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 pass
 
+    def __signal_button_select_field_5(self):
+        self._board = Board(5)
+        self._initialization_step = 2
+
+    def __signal_button_select_field_8(self):
+        self._board = Board(8)
+        self._initialization_step = 2
+
+    def __signal_button_select_field_10(self):
+        self._board = Board(10)
+        self._initialization_step = 2
+
     # Запуск игры
     def run(self) -> None:
         pygame.init()
@@ -116,17 +128,20 @@ class Game:
                                        (100, 100),
                                        "5",
                                        (160, 10, 50),
-                                       (230, 230, 230))
+                                       (230, 230, 230),
+                                       self.__signal_button_select_field_5)
         button_select_field_9 = Button((300, 200),
                                        (100, 100),
                                        "8",
                                        (160, 10, 50),
-                                       (230, 230, 230))
+                                       (230, 230, 230),
+                                       self.__signal_button_select_field_8)
         button_select_field_12 = Button((500, 200),
                                         (100, 100),
                                         "10",
                                         (160, 10, 50),
-                                        (230, 230, 230))
+                                        (230, 230, 230),
+                                       self.__signal_button_select_field_10)
         while True:
             surface.fill((255, 255, 255))
             self._poll_events()
@@ -135,15 +150,6 @@ class Game:
                 button_select_field_4.draw(surface)
                 button_select_field_9.draw(surface)
                 button_select_field_12.draw(surface)
-                if bool(button_select_field_4):
-                    self._board = Board(5)
-                    self._initialization_step = 2
-                elif bool(button_select_field_9):
-                    self._board = Board(8)
-                    self._initialization_step = 2
-                elif bool(button_select_field_12):
-                    self._board = Board(10)
-                    self._initialization_step = 2
 
             elif self._initialization_step == 1:
                 pass
