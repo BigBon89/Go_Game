@@ -4,9 +4,11 @@ import pygame
 import pygame.freetype
 from pygame import Surface
 
+from idrawable import IDrawable
 from widgets.text import Text
 
-class Button:
+
+class Button(IDrawable):
     def __init__(self, position: tuple,
                  size: tuple,
                  text: str,

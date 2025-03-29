@@ -2,8 +2,10 @@ import pygame
 import pygame.freetype
 from pygame import Surface
 
+from idrawable import IDrawable
 
-class Text:
+
+class Text(IDrawable):
     def __init__(self, position: tuple, color: tuple, text: str, font_size: int) -> None:
         self._position = position
         self._color = color
@@ -20,4 +22,3 @@ class Text:
     @property
     def position(self) -> tuple:
         return self._position
-

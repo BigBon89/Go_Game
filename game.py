@@ -3,6 +3,7 @@ import pygame
 from pygame import Surface
 
 from board import Board
+from idrawable import IDrawable
 from widgets.button import Button
 from widgets.text import Text
 
@@ -123,34 +124,32 @@ class Game:
                         (160, 10, 50),
                         (230, 230, 230),
                         exit)
-        text = Text((100, 100), (0, 0, 0), "Выберите размер поля", 16)
-        button_select_field_4 = Button((100, 200),
+        interface_drawable_interface: list[IDrawable] = []
+        interface_drawable_interface.append(Text((100, 100), (0, 0, 0), "Выберите размер поля", 16))
+        interface_drawable_interface.append(Button((100, 200),
                                        (100, 100),
                                        "5",
                                        (160, 10, 50),
                                        (230, 230, 230),
-                                       self.__signal_button_select_field_5)
-        button_select_field_9 = Button((300, 200),
-                                       (100, 100),
-                                       "8",
-                                       (160, 10, 50),
-                                       (230, 230, 230),
-                                       self.__signal_button_select_field_8)
-        button_select_field_12 = Button((500, 200),
-                                        (100, 100),
-                                        "10",
-                                        (160, 10, 50),
-                                        (230, 230, 230),
-                                       self.__signal_button_select_field_10)
+                                       self.__signal_button_select_field_5))
+        interface_drawable_interface.append(Button((300, 200),
+                                            (100, 100),
+                                            "8",
+                                            (160, 10, 50),
+                                            (230, 230, 230),
+                                            self.__signal_button_select_field_8))
+        interface_drawable_interface.append(Button((500, 200),
+                                            (100, 100),
+                                            "10",
+                                            (160, 10, 50),
+                                            (230, 230, 230),
+                                            self.__signal_button_select_field_10))
         while True:
             surface.fill((255, 255, 255))
             self._poll_events()
             if self._initialization_step == 0:
-                text.draw(surface)
-                button_select_field_4.draw(surface)
-                button_select_field_9.draw(surface)
-                button_select_field_12.draw(surface)
-
+                for e in interface_drawable_interface:
+                    e.draw(surface)
             elif self._initialization_step == 1:
                 pass
             elif self._initialization_step == 2:
