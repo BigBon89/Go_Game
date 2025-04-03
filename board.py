@@ -83,5 +83,3 @@ class Board:
         """Добавляет камень конкретного игрока на заданные координаты"""
 
         self.__game_field[x][y] = move
-
-    # def counting_nei
