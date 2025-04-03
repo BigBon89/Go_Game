@@ -119,6 +119,7 @@ class Game:
         self._board = Board(5)
         self._initialization_step = 2
 
+
     def __signal_button_select_field_8(self) -> None:
         """Событие при клике на кнопку"""
 
@@ -136,7 +137,7 @@ class Game:
 
         pygame.init()
         clock = pygame.time.Clock()
-        window_size = (800, 600)
+        window_size = (900, 700)
         surface = pygame.display.set_mode(window_size)
         button = Button((640, 0),
                         (70, 70),
