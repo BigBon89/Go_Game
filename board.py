@@ -45,7 +45,7 @@ class Board:
                     return True
         return False
 
-    def get_group(self, rock_coordinate: tuple[int, int]) -> list[tuple[int, int]] | None:
+    def get_group(self, rock_coordinate: tuple[int, int]): # -> list[tuple[int, int]] | None
         """
         Возвращает список координат клеток одной группы
         """

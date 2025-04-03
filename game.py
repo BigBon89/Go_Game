@@ -21,30 +21,40 @@ class Game:
         self._move_first_player = True
         self._board = Board(0)
 
+        self.rock = pygame.image.load('Image/rock.png')
+        self.monster = pygame.image.load('Image/monster.png')
+        self.FIGURE_SIZE = self._cell_board
+        self.stone_black = pygame.transform.scale(self.rock, (self.FIGURE_SIZE, self.FIGURE_SIZE))
+        self.stone_white = pygame.transform.scale(self.monster, (self.FIGURE_SIZE, self.FIGURE_SIZE))
+
     def draw(self, surface: 'Surface') -> None:
         """Отрисовка игрового поля, включая сетку и камни"""
 
-        for i in range(self._board.size - 1):
-            for j in range(self._board.size - 1):
-                pygame.draw.rect(surface,
-                                 (0, 0, 0),
-                                 (self._cell_board + j * (self._cell_board - self._line_width),
-                                  self._cell_board + i * (self._cell_board - self._line_width),
-                                  self._cell_board,
-                                  self._cell_board),
-                                 self._line_width)
+        for i in range(self._board.size):
+            pygame.draw.line(surface, (0, 0, 0),
+                             (self._cell_board, self._cell_board + i * self._cell_board),
+                             (self._cell_board + (self._board.size - 1) * self._cell_board,
+                              self._cell_board + i * self._cell_board),
+                             self._line_width)
+            # Вертикальные линии
+            pygame.draw.line(surface, (0, 0, 0),
+                             (self._cell_board + i * self._cell_board, self._cell_board),
+                             (self._cell_board + i * self._cell_board,
+                              self._cell_board + (self._board.size - 1) * self._cell_board),
+                             self._line_width)
 
         for i in range(self._board.size):
             for j in range(self._board.size):
                 if self._board[i][j] == 0:
                     continue
-                color = (0, 0, 255) if self._board[i][j] == 1 else (255, 0, 0)
-                pygame.draw.circle(surface, color,
-                                   (self._cell_board + self._line_width // 2 + j * (
-                                           self._cell_board - self._line_width),
-                                    self._cell_board + self._line_width // 2 + i * (
-                                            self._cell_board - self._line_width)),
-                                   (self._cell_board - self._line_width) / 2)
+
+                x = self._cell_board + j * self._cell_board - self.FIGURE_SIZE // 2
+                y = self._cell_board + i * self._cell_board - self.FIGURE_SIZE // 2
+
+                if self._board[i][j] == 1:
+                    surface.blit(self.stone_black, (x, y))
+                else:
+                    surface.blit(self.stone_white, (x, y))
 
     def exit(self) -> None:
         """Выход из программы"""
@@ -92,14 +102,10 @@ class Game:
             return
         self._move_first_player = not self._move_first_player
         self._board.add_rock(index_y, index_x, self._move_first_player + 1)
-        #for i in range(self._board.size):
-            #for j in range(self._board.size):
-                #print(self._board.game_field[i][j], end=' ')
-            #print()
-        #print("----------------------------")
 
     def _poll_events(self) -> None:
         """Обработка событий окна"""
+
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -132,32 +138,35 @@ class Game:
         clock = pygame.time.Clock()
         window_size = (800, 600)
         surface = pygame.display.set_mode(window_size)
-        button = Button((600, 300),
-                        (100, 100),
+        button = Button((640, 0),
+                        (70, 70),
                         "Выйти",
                         (160, 10, 50),
                         (230, 230, 230),
                         exit)
         interface_drawable_interface: list[IDrawable] = []
-        interface_drawable_interface.append(Text((100, 100), (0, 0, 0), "Выберите размер поля", 16))
+        interface_drawable_interface.append(Text((100, 100),
+                                                 (0, 0, 0),
+                                                 "Выберите размер поля",
+                                                 16))
         interface_drawable_interface.append(Button((100, 200),
-                                       (100, 100),
-                                       "5",
-                                       (160, 10, 50),
-                                       (230, 230, 230),
-                                       self.__signal_button_select_field_5))
+                                                   (100, 100),
+                                                   "5",
+                                                   (160, 10, 50),
+                                                   (230, 230, 230),
+                                                   self.__signal_button_select_field_5))
         interface_drawable_interface.append(Button((300, 200),
-                                            (100, 100),
-                                            "8",
-                                            (160, 10, 50),
-                                            (230, 230, 230),
-                                            self.__signal_button_select_field_8))
+                                                   (100, 100),
+                                                   "8",
+                                                   (160, 10, 50),
+                                                   (230, 230, 230),
+                                                   self.__signal_button_select_field_8))
         interface_drawable_interface.append(Button((500, 200),
-                                            (100, 100),
-                                            "10",
-                                            (160, 10, 50),
-                                            (230, 230, 230),
-                                            self.__signal_button_select_field_10))
+                                                   (100, 100),
+                                                   "10",
+                                                   (160, 10, 50),
+                                                   (230, 230, 230),
+                                                   self.__signal_button_select_field_10))
         while True:
             surface.fill((255, 255, 255))
             self._poll_events()
