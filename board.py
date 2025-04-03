@@ -13,7 +13,7 @@ class Board:
         return self._size
 
     @property
-    def game_field(self) -> list:
+    def game_field(self) -> list[list[int]]:
         return self.__game_field
 
     def check_rules(self) -> None:
@@ -31,7 +31,7 @@ class Board:
                 for cell in group:
                     self.__game_field[cell[0]][cell[1]] = 0
 
-    def has_void(self, group: list) -> bool:
+    def has_void(self, group: list[tuple[int, int]]) -> bool:
         """
         Проверяет есть ли пустые соседние клетки у группы камней
         """
@@ -55,7 +55,7 @@ class Board:
         player_id = self.__game_field[rock_coordinate[0]][rock_coordinate[1]]
         if player_id == 0:
             return None
-        q = Queue()
+        q: "Queue[tuple[int, int]]" = Queue()
         q.put(rock_coordinate)
         while not q.empty():
             pos = q.get()
@@ -71,7 +71,7 @@ class Board:
                     q.put((new_pos[0], new_pos[1]))
         return result
 
-    def __getitem__(self, index: int) -> list:
+    def __getitem__(self, index: int) -> list[int]:
         return self.__game_field[index]
 
     def check_rock(self, x: int, y: int) -> bool:

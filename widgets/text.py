@@ -6,7 +6,7 @@ from idrawable import IDrawable
 
 
 class Text(IDrawable):
-    def __init__(self, position: tuple, color: tuple, text: str, font_size: int) -> None:
+    def __init__(self, position: tuple[int, int], color: tuple[int, int, int], text: str, font_size: int) -> None:
         self._position = position
         self._color = color
         self._text = text
@@ -20,5 +20,5 @@ class Text(IDrawable):
         return self._text
 
     @property
-    def position(self) -> tuple:
+    def position(self) -> tuple[int, int]:
         return self._position

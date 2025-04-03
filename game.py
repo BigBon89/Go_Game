@@ -1,4 +1,6 @@
 import random
+from typing import Optional
+
 import pygame
 from pygame import Surface
 
@@ -17,7 +19,7 @@ class Game:
         self._line_width = 2  # Ширина линий поля
         self._initialization_step = 0
         self._move_first_player = True
-        self._board = None
+        self._board = Board(0)
 
     def draw(self, surface: 'Surface') -> None:
         """Отрисовка игрового поля, включая сетку и камни"""
@@ -105,19 +107,19 @@ class Game:
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 pass
 
-    def __signal_button_select_field_5(self):
+    def __signal_button_select_field_5(self) -> None:
         """Событие при клике на кнопку"""
 
         self._board = Board(5)
         self._initialization_step = 2
 
-    def __signal_button_select_field_8(self):
+    def __signal_button_select_field_8(self) -> None:
         """Событие при клике на кнопку"""
 
         self._board = Board(8)
         self._initialization_step = 2
 
-    def __signal_button_select_field_10(self):
+    def __signal_button_select_field_10(self) -> None:
         """Событие при клике на кнопку"""
 
         self._board = Board(10)

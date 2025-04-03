@@ -3,18 +3,18 @@ import time
 import pygame
 import pygame.freetype
 from pygame import Surface
-
+from typing import Callable, Any, Optional
 from idrawable import IDrawable
 from widgets.text import Text
 
 
 class Button(IDrawable):
-    def __init__(self, position: tuple,
-                 size: tuple,
+    def __init__(self, position: tuple[int, int],
+                 size: tuple[int, int],
                  text: str,
-                 active_color: tuple,
-                 inactive_color: tuple,
-                 function: callable = None) -> None:
+                 active_color: tuple[int, int, int],
+                 inactive_color: tuple[int, int, int],
+                 function: Optional[Callable[..., Any]] = None) -> None:
         self._position = position
         self._size = size
         self._width = size[0]
@@ -25,21 +25,21 @@ class Button(IDrawable):
         self.function = function
 
     @property
-    def position(self) -> tuple:
+    def position(self) -> tuple[int, int]:
         return self._position
 
     @position.setter
-    def position(self, position: tuple) -> None:
+    def position(self, position: tuple[int, int]) -> None:
         if position[0] < 0 or position[1] < 0:
             raise ValueError("Координаты x и y не могут быть отрицательными")
         self._position = position
 
     @property
-    def size(self) -> tuple:
+    def size(self) -> tuple[int, int]:
         return self._size
 
     @size.setter
-    def size(self, size: tuple) -> None:
+    def size(self, size: tuple[int, int]) -> None:
         if size[0] < 0 or size[1] < 0:
             raise ValueError("Размеры x и y не могут быть отрицательными")
         self._size = size
