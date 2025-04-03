@@ -19,8 +19,9 @@ class Game:
         self._move_first_player = True
         self._board = None
 
-    # Отрисовка игрового поля, включая сетку и камни
     def draw(self, surface: 'Surface') -> None:
+        """Отрисовка игрового поля, включая сетку и камни"""
+
         for i in range(self._board.size - 1):
             for j in range(self._board.size - 1):
                 pygame.draw.rect(surface,
@@ -43,13 +44,15 @@ class Game:
                                             self._cell_board - self._line_width)),
                                    (self._cell_board - self._line_width) / 2)
 
-    # Выход из программы
     def exit(self) -> None:
+        """Выход из программы"""
+
         pygame.quit()
         exit(0)
 
-    # Делает ход за компьютер
     def _computer_move(self) -> None:
+        """Делает ход за компьютер"""
+
         if self._move_first_player:
             return
         if self._game_mode == 0:
@@ -63,8 +66,9 @@ class Game:
             self._move_first_player = not self._move_first_player
             break
 
-    # Ставит камень при клике на сетку
     def check_click(self) -> None:
+        """Ставит камень при клике на сетку"""
+
         if not pygame.mouse.get_pressed()[0]:
             return
 
@@ -92,8 +96,9 @@ class Game:
             #print()
         #print("----------------------------")
 
-    # Обработка событий окна
     def _poll_events(self) -> None:
+        """Обработка событий окна"""
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.exit()
@@ -101,19 +106,26 @@ class Game:
                 pass
 
     def __signal_button_select_field_5(self):
+        """Событие при клике на кнопку"""
+
         self._board = Board(5)
         self._initialization_step = 2
 
     def __signal_button_select_field_8(self):
+        """Событие при клике на кнопку"""
+
         self._board = Board(8)
         self._initialization_step = 2
 
     def __signal_button_select_field_10(self):
+        """Событие при клике на кнопку"""
+
         self._board = Board(10)
         self._initialization_step = 2
 
-    # Запуск игры
     def run(self) -> None:
+        """Запуск игры"""
+
         pygame.init()
         clock = pygame.time.Clock()
         window_size = (800, 600)

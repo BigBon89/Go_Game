@@ -75,9 +75,13 @@ class Board:
         return self.__game_field[index]
 
     def check_rock(self, x: int, y: int) -> bool:
+        """Проверяет есть ли камень на переданных координатах"""
+
         return self.__game_field[x][y] != 0
 
     def add_rock(self, x: int, y: int, move: int) -> None:
+        """Добавляет камень конкретного игрока на заданные координаты"""
+
         self.__game_field[x][y] = move
 
     # def counting_nei
