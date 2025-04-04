@@ -45,7 +45,7 @@ class Board:
                     return True
         return False
 
-    def get_group(self, rock_coordinate: tuple[int, int]) -> list[tuple[int, int]] | None:
+    def get_group(self, rock_coordinate: tuple[int, int]): # -> list[tuple[int, int]] | None
         """
         Возвращает список координат клеток одной группы
         """
@@ -83,5 +83,3 @@ class Board:
         """Добавляет камень конкретного игрока на заданные координаты"""
 
         self.__game_field[x][y] = move
-
-    # def counting_nei
