@@ -8,7 +8,7 @@ from board import Board
 from idrawable import IDrawable
 from widgets.button import Button
 from widgets.text import Text
-
+from logger import Logger
 
 class Game:
     """Главный класс отвечающий за игру"""
@@ -20,10 +20,11 @@ class Game:
         self._initialization_step = 0
         self._move_first_player = True
         self._board = Board(0)
-        self.error_rate = 0
 
         self.rock = pygame.image.load('Image/rock.png')
         self.monster = pygame.image.load('Image/monster.png')
+        self.logger = Logger()
+        self.logger.info("Create Game")
 
     def draw(self, surface: 'Surface') -> None:
         """Отрисовка игрового поля, включая сетку и камни"""
@@ -96,14 +97,15 @@ class Game:
 
         self._move_first_player = not self._move_first_player
         self._board.add_rock(index_y, index_x, self._move_first_player + 1)
+        self.logger.info(f'click on field, position {index_x}, {index_y}')
 
     def _poll_events(self) -> None:
         """Обработка событий окна"""
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit()
-                exit(0)
+                self.exit()
+
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 pass
 
@@ -111,21 +113,22 @@ class Game:
         """Событие при клике на кнопку"""
 
         self._board = Board(9)
-        self.error_rate = 0
         self.characteristics_field(9)
+        self.logger.info("Changing the field size to 9x9")
 
     def __signal_button_select_field_13(self) -> None:
         """Событие при клике на кнопку"""
 
         self._board = Board(13)
-        self.error_rate = 25
         self.characteristics_field(13)
+        self.logger.info("Changing the field size to 13x13")
 
     def __signal_button_select_field_19(self) -> None:
         """Событие при клике на кнопку"""
 
         self._board = Board(19)
         self.characteristics_field(19)
+        self.logger.info("Changing the field size to 19x19")
 
     def characteristics_field(self, size: int) -> None:
         """Изменяет характеристики поля"""
@@ -140,6 +143,12 @@ class Game:
         for i in range(self._board.size):
             for j in range(self._board.size):
                 self._board.add_rock(i, j, 0);
+        self.logger.info("Field Refresh")
+
+    def exit(self):
+        pygame.quit()
+        self.logger.info("Close Game")
+        exit(0)
 
     def run(self) -> None:
         """Запуск игры"""
@@ -153,7 +162,7 @@ class Game:
                              "Выйти",
                              (160, 10, 50),
                              (230, 230, 230),
-                             exit)
+                             self.exit)
         button_refresh = Button((750, 75),
                                 (90, 70),
                                 "Обновить",
