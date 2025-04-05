@@ -139,13 +139,13 @@ class Game:
         self.stone_white = pygame.transform.scale(self.monster, (self.FIGURE_SIZE, self.FIGURE_SIZE))
         self._initialization_step = 2
 
-    def refresh(self):
+    def refresh(self) -> None:
         for i in range(self._board.size):
             for j in range(self._board.size):
                 self._board.add_rock(i, j, 0);
         self.logger.info("Field Refresh")
 
-    def exit(self):
+    def exit(self) -> None:
         pygame.quit()
         self.logger.info("Close Game")
         exit(0)
