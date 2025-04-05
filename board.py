@@ -5,8 +5,8 @@ class Board:
     """Класс отвечающий за доску"""
 
     def __init__(self, size: int) -> None:
-        self._size = size  # Размер игрового поля
-        self.__game_field = [[0] * self._size for _ in range(self._size)]  # Игровое поле
+        self._size = size
+        self.__game_field = [[0] * self._size for _ in range(self._size)]
 
     @property
     def size(self) -> int:
@@ -37,15 +37,27 @@ class Board:
         """
 
         for pos in group:
-            poses = [(pos[0] + 1, pos[1]), (pos[0] - 1, pos[1]), (pos[0], pos[1] + 1), (pos[0], pos[1] - 1)]
+            poses = [
+                (pos[0] + 1, pos[1]),
+                (pos[0] - 1, pos[1]),
+                (pos[0], pos[1] + 1),
+                (pos[0], pos[1] - 1),
+            ]
             for new_pos in poses:
-                if new_pos[0] < 0 or new_pos[0] >= self._size or new_pos[1] < 0 or new_pos[1] >= self._size:
+                if (
+                    new_pos[0] < 0
+                    or new_pos[0] >= self._size
+                    or new_pos[1] < 0
+                    or new_pos[1] >= self._size
+                ):
                     continue
                 if self.__game_field[new_pos[0]][new_pos[1]] == 0:
                     return True
         return False
 
-    def get_group(self, rock_coordinate: tuple[int, int])-> list[tuple[int, int]] | None:
+    def get_group(
+        self, rock_coordinate: tuple[int, int]
+    ) -> list[tuple[int, int]] | None:
         """
         Возвращает список координат клеток одной группы
         """
@@ -63,9 +75,19 @@ class Board:
                 continue
             visited.add(pos)
             result.append(pos)
-            poses = [(pos[0] + 1, pos[1]), (pos[0] - 1, pos[1]), (pos[0], pos[1] + 1), (pos[0], pos[1] - 1)]
+            poses = [
+                (pos[0] + 1, pos[1]),
+                (pos[0] - 1, pos[1]),
+                (pos[0], pos[1] + 1),
+                (pos[0], pos[1] - 1),
+            ]
             for new_pos in poses:
-                if new_pos[0] < 0 or new_pos[0] >= self._size or new_pos[1] < 0 or new_pos[1] >= self._size:
+                if (
+                    new_pos[0] < 0
+                    or new_pos[0] >= self._size
+                    or new_pos[1] < 0
+                    or new_pos[1] >= self._size
+                ):
                     continue
                 if self.__game_field[new_pos[0]][new_pos[1]] == player_id:
                     q.put((new_pos[0], new_pos[1]))
