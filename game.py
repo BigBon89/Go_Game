@@ -1,4 +1,5 @@
 import random
+from enum import Enum
 
 import pygame
 from pygame import Surface
@@ -10,11 +11,19 @@ from widgets.text import Text
 from logger import Logger
 
 
+class GameModes(Enum):
+    """Режимы игры"""
+
+    hotseat = 0
+    computer_random = 1
+    computer_smart = 2
+
+
 class Game:
     """Главный класс отвечающий за игру"""
 
     def __init__(self) -> None:
-        self._game_mode = 0  # 0 - hotseat, 1 - computer random, 2 - computer smart
+        self._game_mode: GameModes = GameModes.hotseat
         self._cell_board = 60  # Размер доски
         self._line_width = 2  # Ширина линий поля
         self._initialization_step = 0
@@ -70,7 +79,7 @@ class Game:
 
         if self._move_first_player:
             return
-        if self._game_mode == 0:
+        if self._game_mode == GameModes.hotseat:
             return
 
         while True:
