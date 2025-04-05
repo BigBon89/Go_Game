@@ -23,7 +23,7 @@ class Game:
     """Главный класс отвечающий за игру"""
 
     def __init__(self) -> None:
-        self._game_mode: GameModes = GameModes.hotseat
+        self._game_mode: int = GameModes.hotseat.value
         self._cell_board = 60  # Размер доски
         self._line_width = 2  # Ширина линий поля
         self._initialization_step = 0
@@ -79,7 +79,7 @@ class Game:
 
         if self._move_first_player:
             return
-        if self._game_mode == GameModes.hotseat:
+        if self._game_mode == GameModes.hotseat.value:
             return
 
         while True:
