@@ -38,39 +38,39 @@ class Game:
     def draw(self, surface: Surface) -> None:
         """Отрисовка игрового поля, включая сетку и камни"""
 
-        for i in range(self._board.size):
+        for x in range(self._board.size):
             pygame.draw.line(
                 surface=surface,
                 color=(0, 0, 0),
-                start_pos=(self._cell_board, self._cell_board + i * self._cell_board),
+                start_pos=(self._cell_board, self._cell_board + x * self._cell_board),
                 end_pos=(
                     self._cell_board + (self._board.size - 1) * self._cell_board,
-                    self._cell_board + i * self._cell_board),
+                    self._cell_board + x * self._cell_board),
                 width=self._line_width
             )
 
             pygame.draw.line(
                 surface=surface,
                 color=(0, 0, 0),
-                start_pos=(self._cell_board + i * self._cell_board, self._cell_board),
+                start_pos=(self._cell_board + x * self._cell_board, self._cell_board),
                 end_pos=(
-                    self._cell_board + i * self._cell_board,
+                    self._cell_board + x * self._cell_board,
                     self._cell_board + (self._board.size - 1) * self._cell_board),
                 width=self._line_width
             )
 
-        for i in range(self._board.size):
-            for j in range(self._board.size):
-                if self._board[i][j] == 0:
+        for x in range(self._board.size):
+            for y in range(self._board.size):
+                if self._board[x][y] == 0:
                     continue
 
-                x = self._cell_board + j * self._cell_board - self.FIGURE_SIZE // 2
-                y = self._cell_board + i * self._cell_board - self.FIGURE_SIZE // 2
+                index_x = self._cell_board + y * self._cell_board - self.FIGURE_SIZE // 2
+                index_y = self._cell_board + x * self._cell_board - self.FIGURE_SIZE // 2
 
-                if self._board[i][j] == 1:
-                    surface.blit(self.stone_black, (x, y))
+                if self._board[x][y] == 1:
+                    surface.blit(self.stone_black, (index_x, index_y))
                 else:
-                    surface.blit(self.stone_white, (x, y))
+                    surface.blit(self.stone_white, (index_x, index_y))
 
     def _computer_move(self) -> None:
         """Делает ход за компьютер"""
@@ -82,8 +82,8 @@ class Game:
 
         while True:
             point = Position(
-                x=random.randint(0, self._board.size - 1),
-                y=random.randint(0, self._board.size - 1),
+                random.randint(0, self._board.size - 1),
+                random.randint(0, self._board.size - 1),
             )
             if self._board.check_rock(point.y, point.x):
                 continue
@@ -138,21 +138,6 @@ class Game:
         self._board = Board(size)
         self.characteristics_field(size)
         self.logger.info("Changing the field size to 9x9")
-
-    #
-    # def __signal_button_select_field_13(self) -> None:
-    #     """Событие при клике на кнопку"""
-    #
-    #     self._board = Board(13)
-    #     self.characteristics_field(13)
-    #     self.logger.info("Changing the field size to 13x13")
-    #
-    # def __signal_button_select_field_19(self) -> None:
-    #     """Событие при клике на кнопку"""
-    #
-    #     self._board = Board(19)
-    #     self.characteristics_field(19)
-    #     self.logger.info("Changing the field size to 19x19")
 
     def characteristics_field(self, size: int) -> None:
         """Изменяет характеристики поля"""
