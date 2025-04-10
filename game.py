@@ -4,7 +4,7 @@ from enum import Enum
 import pygame
 from pygame import Surface
 
-from board import Board
+from board import Board, Position
 from idrawable import IDrawable
 from widgets.button import Button
 from widgets.text import Text
@@ -17,7 +17,6 @@ class GameModes(Enum):
     hotseat = 0
     computer_random = 1
     computer_smart = 2
-
 
 class Game:
     """Главный класс отвечающий за игру"""
@@ -35,30 +34,28 @@ class Game:
         self.logger = Logger()
         self.logger.info("Create Game")
 
-    def draw(self, surface: "Surface") -> None:
+    def draw(self, surface: Surface) -> None:
         """Отрисовка игрового поля, включая сетку и камни"""
 
         for i in range(self._board.size):
             pygame.draw.line(
-                surface,
-                (0, 0, 0),
-                (self._cell_board, self._cell_board + i * self._cell_board),
-                (
+                surface=surface,
+                color=(0, 0, 0),
+                start_pos=(self._cell_board, self._cell_board + i * self._cell_board),
+                end_pos=(
                     self._cell_board + (self._board.size - 1) * self._cell_board,
-                    self._cell_board + i * self._cell_board,
-                ),
-                self._line_width,
+                    self._cell_board + i * self._cell_board),
+                width=self._line_width
             )
 
             pygame.draw.line(
-                surface,
-                (0, 0, 0),
-                (self._cell_board + i * self._cell_board, self._cell_board),
-                (
+                surface=surface,
+                color=(0, 0, 0),
+                start_pos=(self._cell_board + i * self._cell_board, self._cell_board),
+                end_pos=(
                     self._cell_board + i * self._cell_board,
-                    self._cell_board + (self._board.size - 1) * self._cell_board,
-                ),
-                self._line_width,
+                    self._cell_board + (self._board.size - 1) * self._cell_board),
+                width=self._line_width
             )
 
         for i in range(self._board.size):
@@ -83,13 +80,13 @@ class Game:
             return
 
         while True:
-            point = (
-                random.randint(0, self._board.size - 1),
-                random.randint(0, self._board.size - 1),
+            point = Position(
+                x=random.randint(0, self._board.size - 1),
+                y=random.randint(0, self._board.size - 1),
             )
-            if self._board.check_rock(point[1], point[0]):
+            if self._board.check_rock(point.y, point.x):
                 continue
-            self._board.game_field[point[0]][point[1]] = 2
+            self._board.game_field[point.y][point.x] = 2
             self._move_first_player = not self._move_first_player
             break
 
@@ -101,27 +98,28 @@ class Game:
 
         if not self._move_first_player and self._game_mode != 0:
             return
-        mouse_pos = pygame.mouse.get_pos()
+        mouse_pos = Position(*pygame.mouse.get_pos())
         position = self._cell_board - (self._cell_board - self._line_width) / 2
 
         if (
-            min(mouse_pos[0], mouse_pos[1]) < position
-            or max(mouse_pos[0], mouse_pos[1]) >= position * 2 * self._board.size
+                min(mouse_pos.x, mouse_pos.y) < position
+                or max(mouse_pos.x, mouse_pos.y) >= position * 2 * self._board.size
         ):
             return
 
-        index_x = round((mouse_pos[0] - self._cell_board) / self._cell_board)
-        index_y = round((mouse_pos[1] - self._cell_board) / self._cell_board)
+        current_position =Position(
+            round((mouse_pos.x - self._cell_board) / self._cell_board),
+            round((mouse_pos.y - self._cell_board) / self._cell_board))
 
-        if not (0 <= index_x < self._board.size and 0 <= index_y < self._board.size):
+        if not (0 <= current_position.x < self._board.size and 0 <= current_position.y < self._board.size):
             return
 
-        if self._board.check_rock(index_y, index_x):
+        if self._board.check_rock(current_position.y, current_position.x):
             return
 
         self._move_first_player = not self._move_first_player
-        self._board.add_rock(index_y, index_x, self._move_first_player + 1)
-        self.logger.info(f"click on field, position {index_x}, {index_y}")
+        self._board.add_rock(current_position, self._move_first_player + 1)
+        self.logger.info(f"click on field, position {current_position.x}, {current_position.y}")
 
     def _poll_events(self) -> None:
         """Обработка событий окна"""
@@ -168,9 +166,9 @@ class Game:
         self._initialization_step = 2
 
     def refresh(self) -> None:
-        for i in range(self._board.size):
-            for j in range(self._board.size):
-                self._board.add_rock(i, j, 0)
+        for x in range(self._board.size):
+            for y in range(self._board.size):
+                self._board.add_rock(Position(x, y), 0)
         self.logger.info("Field Refresh")
 
     def exit(self) -> None:
@@ -187,44 +185,44 @@ class Game:
         surface = pygame.display.set_mode(window_size)
 
         button_exit = Button(
-            (750, 0),
-            (70, 70),
-            "Выйти",
-            (160, 10, 50),
-            (230, 230, 230),
-            self.exit
+            position=Position(750, 0),
+            size=(70, 70),
+            text="Выйти",
+            active_color=(160, 10, 50),
+            inactive_color=(230, 230, 230),
+            function=self.exit
         )
         button_refresh = Button(
-            (750, 75),
-            (90, 70),
-            "Обновить",
-            (160, 10, 50),
-            (230, 230, 230),
-            self.refresh,
+            position=Position(750, 75),
+            size=(90, 70),
+            text="Обновить",
+            active_color=(160, 10, 50),
+            inactive_color=(230, 230, 230),
+            function=self.refresh,
         )
         button_change_field9 = Button(
-            (750, 155),
-            (230, 70),
-            "Изменить размер на 9x9",
-            (160, 10, 50),
-            (230, 230, 230),
-            self.__signal_button_select_field_9,
+            position=Position(750, 155),
+            size=(230, 70),
+            text="Изменить размер на 9x9",
+            active_color=(160, 10, 50),
+            inactive_color=(230, 230, 230),
+            function=self.__signal_button_select_field_9,
         )
         button_change_field13 = Button(
-            (750, 230),
-            (230, 70),
-            "Изменить размер на 13x13",
-            (160, 10, 50),
-            (230, 230, 230),
-            self.__signal_button_select_field_13,
+            position=Position(750, 230),
+            size=(230, 70),
+            text="Изменить размер на 13x13",
+            active_color=(160, 10, 50),
+            inactive_color=(230, 230, 230),
+            function=self.__signal_button_select_field_13,
         )
         button_change_field19 = Button(
-            (750, 310),
-            (230, 70),
-            "Изменить размер на 19x19",
-            (160, 10, 50),
-            (230, 230, 230),
-            self.__signal_button_select_field_19,
+            position=Position(750, 310),
+            size=(230, 70),
+            text="Изменить размер на 19x19",
+            active_color=(160, 10, 50),
+            inactive_color=(230, 230, 230),
+            function=self.__signal_button_select_field_19,
         )
 
         interface_drawable_interface: list[IDrawable] = []
@@ -233,32 +231,32 @@ class Game:
         )
         interface_drawable_interface.append(
             Button(
-                (100, 200),
-                (100, 100),
-                "9",
-                (160, 10, 50),
-                (230, 230, 230),
-                self.__signal_button_select_field_9,
+                position=Position(100, 200),
+                size=(100, 100),
+                text="9",
+                active_color=(160, 10, 50),
+                inactive_color=(230, 230, 230),
+                function=self.__signal_button_select_field_9,
             )
         )
         interface_drawable_interface.append(
             Button(
-                (300, 200),
-                (100, 100),
-                "13",
-                (160, 10, 50),
-                (230, 230, 230),
-                self.__signal_button_select_field_13,
+                position=Position(300, 200),
+                size=(100, 100),
+                text="13",
+                active_color=(160, 10, 50),
+                inactive_color=(230, 230, 230),
+                function=self.__signal_button_select_field_13,
             )
         )
         interface_drawable_interface.append(
             Button(
-                (500, 200),
-                (100, 100),
-                "19",
-                (160, 10, 50),
-                (230, 230, 230),
-                self.__signal_button_select_field_19,
+                position=Position(500, 200),
+                size=(100, 100),
+                text="19",
+                active_color=(160, 10, 50),
+                inactive_color=(230, 230, 230),
+                function=self.__signal_button_select_field_19,
             )
         )
         while True:

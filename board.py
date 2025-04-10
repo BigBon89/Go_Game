@@ -50,8 +50,10 @@ class Board:
             ]
             for new_pos in poses:
                 if (
-                        self._size <= new_pos[0] < 0
-                        or self._size <= new_pos[1] < 0
+                        new_pos.x < 0
+                        or new_pos.x >= self._size
+                        or new_pos.y < 0
+                        or new_pos.y >= self._size
                 ):
                     continue
                 if self.__game_field[new_pos.x][new_pos.y] == 0:
@@ -87,8 +89,11 @@ class Board:
             ]
             for new_pos in poses:
                 if (
-                        self._size <= new_pos.x < 0
-                        or self._size <= new_pos.y < 0
+                        new_pos.x < 0
+                        or new_pos.x >= self._size
+                        or new_pos.y < 0
+                        or new_pos.y >= self._size
+
                 ):
                     continue
                 if self.__game_field[new_pos.x][new_pos.y] == player_id:
@@ -103,7 +108,7 @@ class Board:
 
         return self.__game_field[x][y] != 0
 
-    def add_rock(self, x: int, y: int, move: int) -> None:
+    def add_rock(self, position: Position, move: int) -> None:
         """Добавляет камень конкретного игрока на заданные координаты"""
 
-        self.__game_field[x][y] = move
+        self.__game_field[position.y][position.x] = move
