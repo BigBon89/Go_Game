@@ -30,8 +30,8 @@ class Game:
         self._move_first_player = True
         self._board = Board(0)
 
-        self.rock = pygame.image.load("Image/rock.png")
-        self.monster = pygame.image.load("Image/monster.png")
+        self.rock = pygame.image.load("image/rock.png")
+        self.monster = pygame.image.load("image/monster.png")
         self.logger = Logger()
         self.logger.info("Create Game")
 
