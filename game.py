@@ -18,6 +18,7 @@ class GameModes(Enum):
     computer_random = 1
     computer_smart = 2
 
+
 class Game:
     """Главный класс отвечающий за игру"""
 
@@ -107,7 +108,7 @@ class Game:
         ):
             return
 
-        current_position =Position(
+        current_position = Position(
             round((mouse_pos.x - self._cell_board) / self._cell_board),
             round((mouse_pos.y - self._cell_board) / self._cell_board))
 
@@ -131,26 +132,27 @@ class Game:
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 pass
 
-    def __signal_button_select_field_9(self) -> None:
+    def __signal_button_select_field(self, size: int) -> None:
         """Событие при клике на кнопку"""
 
-        self._board = Board(9)
-        self.characteristics_field(9)
+        self._board = Board(size)
+        self.characteristics_field(size)
         self.logger.info("Changing the field size to 9x9")
 
-    def __signal_button_select_field_13(self) -> None:
-        """Событие при клике на кнопку"""
-
-        self._board = Board(13)
-        self.characteristics_field(13)
-        self.logger.info("Changing the field size to 13x13")
-
-    def __signal_button_select_field_19(self) -> None:
-        """Событие при клике на кнопку"""
-
-        self._board = Board(19)
-        self.characteristics_field(19)
-        self.logger.info("Changing the field size to 19x19")
+    #
+    # def __signal_button_select_field_13(self) -> None:
+    #     """Событие при клике на кнопку"""
+    #
+    #     self._board = Board(13)
+    #     self.characteristics_field(13)
+    #     self.logger.info("Changing the field size to 13x13")
+    #
+    # def __signal_button_select_field_19(self) -> None:
+    #     """Событие при клике на кнопку"""
+    #
+    #     self._board = Board(19)
+    #     self.characteristics_field(19)
+    #     self.logger.info("Changing the field size to 19x19")
 
     def characteristics_field(self, size: int) -> None:
         """Изменяет характеристики поля"""
@@ -206,7 +208,7 @@ class Game:
             text="Изменить размер на 9x9",
             active_color=(160, 10, 50),
             inactive_color=(230, 230, 230),
-            function=self.__signal_button_select_field_9,
+            function=lambda: self.__signal_button_select_field(9),
         )
         button_change_field13 = Button(
             position=Position(765, 230),
@@ -214,7 +216,7 @@ class Game:
             text="Изменить размер на 13x13",
             active_color=(160, 10, 50),
             inactive_color=(230, 230, 230),
-            function=self.__signal_button_select_field_13,
+            function=lambda: self.__signal_button_select_field(13),
         )
         button_change_field19 = Button(
             position=Position(765, 310),
@@ -222,60 +224,19 @@ class Game:
             text="Изменить размер на 19x19",
             active_color=(160, 10, 50),
             inactive_color=(230, 230, 230),
-            function=self.__signal_button_select_field_19,
-        )
-
-        interface_drawable_interface: list[IDrawable] = []
-        interface_drawable_interface.append(
-            Text((100, 100), (0, 0, 0), "Выберите размер поля", 50)
-        )
-        interface_drawable_interface.append(
-            Button(
-                position=Position(100, 200),
-                size=(100, 100),
-                text="9",
-                active_color=(160, 10, 50),
-                inactive_color=(230, 230, 230),
-                function=self.__signal_button_select_field_9,
-            )
-        )
-        interface_drawable_interface.append(
-            Button(
-                position=Position(300, 200),
-                size=(100, 100),
-                text="13",
-                active_color=(160, 10, 50),
-                inactive_color=(230, 230, 230),
-                function=self.__signal_button_select_field_13,
-            )
-        )
-        interface_drawable_interface.append(
-            Button(
-                position=Position(500, 200),
-                size=(100, 100),
-                text="19",
-                active_color=(160, 10, 50),
-                inactive_color=(230, 230, 230),
-                function=self.__signal_button_select_field_19,
-            )
+            function=lambda: self.__signal_button_select_field(19),
         )
         while True:
             surface.fill((255, 255, 255))
             self._poll_events()
-            if self._initialization_step == 0:
-                for e in interface_drawable_interface:
-                    e.draw(surface)
-            elif self._initialization_step == 1:
-                pass
-            elif self._initialization_step == 2:
-                self.check_click()
-                self._computer_move()
-                self.draw(surface)
-                button_refresh.draw(surface)
-                button_exit.draw(surface)
-                button_change_field9.draw(surface)
-                button_change_field13.draw(surface)
-                button_change_field19.draw(surface)
-                self._board.check_rules()
+            self.check_click()
+            self._computer_move()
+            self.draw(surface)
+            button_refresh.draw(surface)
+            button_exit.draw(surface)
+            button_change_field9.draw(surface)
+            button_change_field13.draw(surface)
+            button_change_field19.draw(surface)
+            self._board.check_rules()
             pygame.display.update()
             clock.tick(60)
