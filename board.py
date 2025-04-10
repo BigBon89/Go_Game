@@ -87,8 +87,8 @@ class Board:
             ]
             for new_pos in poses:
                 if (
-                        self._size <= new_pos[0] < 0
-                        or self._size <= new_pos[1] < 0
+                        self._size <= new_pos.x < 0
+                        or self._size <= new_pos.y < 0
                 ):
                     continue
                 if self.__game_field[new_pos.x][new_pos.y] == player_id:
