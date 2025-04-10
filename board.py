@@ -1,4 +1,10 @@
 from queue import Queue
+from typing import Optional, NamedTuple
+
+
+class Position(NamedTuple):
+    x: int
+    y: int
 
 
 class Board:
@@ -21,9 +27,9 @@ class Board:
         Проверяет правила игры
         """
 
-        for i in range(self._size):
-            for j in range(self._size):
-                group = self.get_group((i, j))
+        for x in range(self._size - 1):
+            for y in range(self._size - 1):
+                group = self.get_group(Position(x, y))
                 if group is None:
                     continue
                 if self.has_void(group):
@@ -31,33 +37,30 @@ class Board:
                 for cell in group:
                     self.__game_field[cell[0]][cell[1]] = 0
 
-    def has_void(self, group: list[tuple[int, int]]) -> bool:
+    def has_void(self, group: list[Position]) -> bool:
         """
         Проверяет есть ли пустые соседние клетки у группы камней
         """
-
         for pos in group:
             poses = [
-                (pos[0] + 1, pos[1]),
-                (pos[0] - 1, pos[1]),
-                (pos[0], pos[1] + 1),
-                (pos[0], pos[1] - 1),
+                Position(pos.x + 1, pos.y),
+                Position(pos.x - 1, pos.y),
+                Position(pos.x, pos.y + 1),
+                Position(pos.x, pos.y - 1),
             ]
             for new_pos in poses:
                 if (
-                    new_pos[0] < 0
-                    or new_pos[0] >= self._size
-                    or new_pos[1] < 0
-                    or new_pos[1] >= self._size
+                        self._size <= new_pos[0] < 0
+                        or self._size <= new_pos[1] < 0
                 ):
                     continue
-                if self.__game_field[new_pos[0]][new_pos[1]] == 0:
+                if self.__game_field[new_pos.x][new_pos.y] == 0:
                     return True
         return False
 
     def get_group(
-        self, rock_coordinate: tuple[int, int]
-    ) -> list[tuple[int, int]] | None:
+            self, rock_coordinate: Position
+    ) -> Optional[list[Position]]:
         """
         Возвращает список координат клеток одной группы
         """
@@ -67,8 +70,9 @@ class Board:
         player_id = self.__game_field[rock_coordinate[0]][rock_coordinate[1]]
         if player_id == 0:
             return None
-        q: "Queue[tuple[int, int]]" = Queue()
+        q: Queue[Position] = Queue()
         q.put(rock_coordinate)
+
         while not q.empty():
             pos = q.get()
             if pos in visited:
@@ -76,21 +80,19 @@ class Board:
             visited.add(pos)
             result.append(pos)
             poses = [
-                (pos[0] + 1, pos[1]),
-                (pos[0] - 1, pos[1]),
-                (pos[0], pos[1] + 1),
-                (pos[0], pos[1] - 1),
+                Position(pos.x + 1, pos.y),
+                Position(pos.x - 1, pos.y),
+                Position(pos.x, pos.y + 1),
+                Position(pos.x, pos.y - 1)
             ]
             for new_pos in poses:
                 if (
-                    new_pos[0] < 0
-                    or new_pos[0] >= self._size
-                    or new_pos[1] < 0
-                    or new_pos[1] >= self._size
+                        self._size <= new_pos[0] < 0
+                        or self._size <= new_pos[1] < 0
                 ):
                     continue
-                if self.__game_field[new_pos[0]][new_pos[1]] == player_id:
-                    q.put((new_pos[0], new_pos[1]))
+                if self.__game_field[new_pos.x][new_pos.y] == player_id:
+                    q.put(new_pos)
         return result
 
     def __getitem__(self, index: int) -> list[int]:
