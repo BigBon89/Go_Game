@@ -185,7 +185,7 @@ class Game:
         surface = pygame.display.set_mode(window_size)
 
         button_exit = Button(
-            position=Position(750, 0),
+            position=Position(775, 0),
             size=(70, 70),
             text="Выйти",
             active_color=(160, 10, 50),
@@ -193,7 +193,7 @@ class Game:
             function=self.exit
         )
         button_refresh = Button(
-            position=Position(750, 75),
+            position=Position(775, 75),
             size=(90, 70),
             text="Обновить",
             active_color=(160, 10, 50),
@@ -201,7 +201,7 @@ class Game:
             function=self.refresh,
         )
         button_change_field9 = Button(
-            position=Position(750, 155),
+            position=Position(765, 155),
             size=(230, 70),
             text="Изменить размер на 9x9",
             active_color=(160, 10, 50),
@@ -209,7 +209,7 @@ class Game:
             function=self.__signal_button_select_field_9,
         )
         button_change_field13 = Button(
-            position=Position(750, 230),
+            position=Position(765, 230),
             size=(230, 70),
             text="Изменить размер на 13x13",
             active_color=(160, 10, 50),
@@ -217,7 +217,7 @@ class Game:
             function=self.__signal_button_select_field_13,
         )
         button_change_field19 = Button(
-            position=Position(750, 310),
+            position=Position(765, 310),
             size=(230, 70),
             text="Изменить размер на 19x19",
             active_color=(160, 10, 50),
