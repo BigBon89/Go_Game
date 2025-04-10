@@ -103,10 +103,10 @@ class Board:
     def __getitem__(self, index: int) -> list[int]:
         return self.__game_field[index]
 
-    def check_rock(self, x: int, y: int) -> bool:
+    def check_rock(self, position: Position) -> bool:
         """Проверяет есть ли камень на переданных координатах"""
 
-        return self.__game_field[x][y] != 0
+        return self.__game_field[position.x][position.y] != 0
 
     def add_rock(self, position: Position, move: int) -> None:
         """Добавляет камень конкретного игрока на заданные координаты"""

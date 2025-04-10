@@ -85,7 +85,7 @@ class Game:
                 random.randint(0, self._board.size - 1),
                 random.randint(0, self._board.size - 1),
             )
-            if self._board.check_rock(point.y, point.x):
+            if self._board.check_rock(point):
                 continue
             self._board.game_field[point.y][point.x] = 2
             self._move_first_player = not self._move_first_player
@@ -115,7 +115,7 @@ class Game:
         if not (0 <= current_position.x < self._board.size and 0 <= current_position.y < self._board.size):
             return
 
-        if self._board.check_rock(current_position.y, current_position.x):
+        if self._board.check_rock(current_position):
             return
 
         self._move_first_player = not self._move_first_player
