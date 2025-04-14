@@ -113,7 +113,7 @@ class Game:
         if not (0 <= current_position.x < self._board.size and 0 <= current_position.y < self._board.size):
             return
 
-        if self._board.check_rock(current_position):
+        if self._board.check_rock(Position(current_position.y, current_position.x)):
             return
 
         self._move_first_player = not self._move_first_player
