@@ -41,7 +41,9 @@ class Game:
             pygame.draw.line(
                 surface=surface,
                 color=(0, 0, 0),
-                start_pos=(self._cell_board, self._cell_board + x * self._cell_board),
+                start_pos=(
+                    self._cell_board, self._cell_board + x * self._cell_board
+                ),
                 end_pos=(
                     self._cell_board + (self._board.size - 1) * self._cell_board,
                     self._cell_board + x * self._cell_board),
@@ -51,7 +53,9 @@ class Game:
             pygame.draw.line(
                 surface=surface,
                 color=(0, 0, 0),
-                start_pos=(self._cell_board + x * self._cell_board, self._cell_board),
+                start_pos=(
+                    self._cell_board + x * self._cell_board, self._cell_board
+                ),
                 end_pos=(
                     self._cell_board + x * self._cell_board,
                     self._cell_board + (self._board.size - 1) * self._cell_board),
@@ -102,8 +106,8 @@ class Game:
         position = self._cell_board - (self._cell_board - self._line_width) / 2
 
         if (
-                min(mouse_pos.x, mouse_pos.y) < position
-                or max(mouse_pos.x, mouse_pos.y) >= position * 2 * self._board.size
+            min(mouse_pos.x, mouse_pos.y) < position
+            or max(mouse_pos.x, mouse_pos.y) >= position * 2 * self._board.size
         ):
             return
 
@@ -111,15 +115,25 @@ class Game:
             round((mouse_pos.x - self._cell_board) / self._cell_board),
             round((mouse_pos.y - self._cell_board) / self._cell_board))
 
-        if not (0 <= current_position.x < self._board.size and 0 <= current_position.y < self._board.size):
+        if not (
+                0 <= current_position.x < self._board.size and
+                0 <= current_position.y < self._board.size
+        ):
             return
 
-        if self._board.check_rock(Position(current_position.y, current_position.x)):
+        if self._board.check_rock(
+                Position(
+                    current_position.y, current_position.x
+                )
+        ):
             return
 
         self._move_first_player = not self._move_first_player
         self._board.add_rock(current_position, self._move_first_player + 1)
-        self.logger.info(f"click on field, position {current_position.x}, {current_position.y}")
+        self.logger.info(
+            f"click on field, position"
+            f"{current_position.x}, {current_position.y}"
+        )
 
     def _poll_events(self) -> None:
         """Обработка событий окна"""

@@ -78,8 +78,8 @@ class Button(IDrawable):
             return False
         mouse_pos = Position(*pygame.mouse.get_pos())
         if (
-                self._position.x < mouse_pos.x < self._position.x + self._size[0]
-                and self._position.y < mouse_pos.y < self._position.y + self._size[1]
+            self._position.x < mouse_pos.x < self._position.x + self._size[0] and
+            self._position.y < mouse_pos.y < self._position.y + self._size[1]
         ):
             time.sleep(0.2)
             return True

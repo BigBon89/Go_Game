@@ -2,7 +2,11 @@ import logging
 
 
 class Logger:
-    def __init__(self, log_file: str = "logger.log", level: int = logging.INFO) -> None:
+    def __init__(
+            self,
+            log_file: str = "logger.log",
+            level: int = logging.INFO
+    ) -> None:
         self.logger = logging.getLogger("logs for Go_Game")
         self.logger.setLevel(level)
 
