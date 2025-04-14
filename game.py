@@ -5,9 +5,7 @@ import pygame
 from pygame import Surface
 
 from board import Board, Position
-from idrawable import IDrawable
 from widgets.button import Button
-from widgets.text import Text
 from logger import Logger
 
 
