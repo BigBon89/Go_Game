@@ -80,21 +80,20 @@ class Game:
 
         if self._move_first_player:
             return
+
         if self._game_mode == GameModes.hotseat.value:
             return
 
         while True:
-            point = Position(
+            position = Position(
                 random.randint(0, self._board.size - 1),
                 random.randint(0, self._board.size - 1),
             )
-            if self._board.check_rock(point):
-                continue
-            self._board.game_field[point.y][point.x] = 2
-            self._move_first_player = not self._move_first_player
-            break
 
-    def check_click(self) -> None:
+            if self._make_move(position):
+                break
+
+    def _check_click(self) -> None:
         """Ставит камень при клике на сетку"""
 
         if not pygame.mouse.get_pressed()[0]:
@@ -116,24 +115,31 @@ class Game:
             round((mouse_pos.y - self._cell_board) / self._cell_board))
 
         if not (
-                0 <= current_position.x < self._board.size and
-                0 <= current_position.y < self._board.size
+            0 <= current_position.x < self._board.size and
+            0 <= current_position.y < self._board.size
         ):
             return
+
+        self._make_move(current_position)
+
+    def _make_move(self, pos: Position) -> bool:
+        """Делает ход за текущего игрока"""
 
         if self._board.check_rock(
-                Position(
-                    current_position.y, current_position.x
-                )
+            Position(
+                pos.y,
+                pos.x
+            )
         ):
-            return
+            return False
 
         self._move_first_player = not self._move_first_player
-        self._board.add_rock(current_position, self._move_first_player + 1)
+        self._board.add_rock(pos, self._move_first_player + 1)
         self.logger.info(
-            f"click on field, position"
-            f"{current_position.x}, {current_position.y}"
+            f"The player {int(self._move_first_player) + 1} made a move on the position "
+            f"({pos.x}, {pos.y})"
         )
+        return True
 
     def _poll_events(self) -> None:
         """Обработка событий окна"""
@@ -150,7 +156,15 @@ class Game:
 
         self._board = Board(size)
         self.characteristics_field(size)
+        self._initialization_step = 1
         self.logger.info(f"Field size to {size}x{size}")
+
+    def __signal_button_select_gamemode(self, gamemode: int) -> None:
+        """Событие при клике на кнопку"""
+
+        self._game_mode = gamemode
+        self._initialization_step = 2
+        self.logger.info(f"Gamemode to {gamemode}")
 
     def characteristics_field(self, size: int) -> None:
         """Изменяет характеристики поля"""
@@ -203,7 +217,7 @@ class Game:
         button_field9 = Button(
             position=Position(765, 155),
             size=(230, 70),
-            text="Изменить размер на 9x9",
+            text="Размер поля 9x9",
             active_color=(160, 10, 50),
             inactive_color=(230, 230, 230),
             function=lambda: self.__signal_button_select_field(9)
@@ -211,7 +225,7 @@ class Game:
         button_field13 = Button(
             position=Position(765, 230),
             size=(230, 70),
-            text="Изменить размер на 13x13",
+            text="Размер поля 13x13",
             active_color=(160, 10, 50),
             inactive_color=(230, 230, 230),
             function=lambda: self.__signal_button_select_field(13)
@@ -219,26 +233,56 @@ class Game:
         button_field19 = Button(
             position=Position(765, 310),
             size=(230, 70),
-            text="Изменить размер на 19x19",
+            text="Размер поля 19x19",
             active_color=(160, 10, 50),
             inactive_color=(230, 230, 230),
             function=lambda: self.__signal_button_select_field(19)
         )
-        interface_drawable_interface: list[IDrawable] = [
+        button_gamemode_hotseat = Button(
+            position=Position(765, 155),
+            size=(230, 70),
+            text="Режим игры hotseat",
+            active_color=(160, 10, 50),
+            inactive_color=(230, 230, 230),
+            function=lambda: self.__signal_button_select_gamemode(GameModes.hotseat.value)
+        )
+        button_gamemode_computer_random = Button(
+            position=Position(765, 230),
+            size=(230, 70),
+            text="Режим игры computer random",
+            active_color=(160, 10, 50),
+            inactive_color=(230, 230, 230),
+            function=lambda: self.__signal_button_select_gamemode(GameModes.computer_random.value)
+        )
+        button_gamemode_computer_smart = Button(
+            position=Position(765, 310),
+            size=(230, 70),
+            text="Режим игры computer smart",
+            active_color=(160, 10, 50),
+            inactive_color=(230, 230, 230),
+            function=lambda: self.__signal_button_select_gamemode(GameModes.computer_smart.value)
+        )
+        game_interface_fields_objects: list[IDrawable] = [
             button_field9,
             button_field13,
             button_field19
+        ]
+        game_interface_gamemodes_objects: list[IDrawable] = [
+            button_gamemode_hotseat,
+            button_gamemode_computer_random,
+            button_gamemode_computer_smart
         ]
         while True:
             surface.fill((255, 255, 255))
             self._poll_events()
             if self._initialization_step == 0:
-                for e in interface_drawable_interface:
+                for e in game_interface_fields_objects:
                     e.draw(surface)
             elif self._initialization_step == 1:
-                pass
+                for e in game_interface_gamemodes_objects:
+                    e.draw(surface)
             elif self._initialization_step == 2:
-                self.check_click()
+                self._check_click()
                 self._computer_move()
                 self.draw(surface)
                 button_exit.draw(surface)
