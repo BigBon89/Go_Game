@@ -5,6 +5,7 @@ import pygame
 from pygame import Surface
 
 from board import Board, Position
+from idrawable import IDrawable
 from widgets.button import Button
 from logger import Logger
 
@@ -135,7 +136,7 @@ class Game:
 
         self._board = Board(size)
         self.characteristics_field(size)
-        self.logger.info("Changing the field size to 9x9")
+        self.logger.info(f"Field size to {size}x{size}")
 
     def characteristics_field(self, size: int) -> None:
         """Изменяет характеристики поля"""
@@ -156,7 +157,15 @@ class Game:
                 self._board.add_rock(Position(x, y), 0)
         self.logger.info("Field Refresh")
 
+    def finish_game(self):
+        """Заканчивает игру, возвращает в главное меню"""
+
+        self._initialization_step = 0
+        self.refresh()
+
     def exit(self) -> None:
+        """Завершает работу приложения"""
+
         pygame.quit()
         self.logger.info("Close Game")
         exit(0)
@@ -175,51 +184,50 @@ class Game:
             text="Выйти",
             active_color=(160, 10, 50),
             inactive_color=(230, 230, 230),
-            function=self.exit
+            function=self.finish_game
         )
-        button_refresh = Button(
-            position=Position(775, 75),
-            size=(90, 70),
-            text="Обновить",
-            active_color=(160, 10, 50),
-            inactive_color=(230, 230, 230),
-            function=self.refresh,
-        )
-        button_change_field9 = Button(
+        button_field9 = Button(
             position=Position(765, 155),
             size=(230, 70),
             text="Изменить размер на 9x9",
             active_color=(160, 10, 50),
             inactive_color=(230, 230, 230),
-            function=lambda: self.__signal_button_select_field(9),
+            function=lambda: self.__signal_button_select_field(9)
         )
-        button_change_field13 = Button(
+        button_field13 = Button(
             position=Position(765, 230),
             size=(230, 70),
             text="Изменить размер на 13x13",
             active_color=(160, 10, 50),
             inactive_color=(230, 230, 230),
-            function=lambda: self.__signal_button_select_field(13),
+            function=lambda: self.__signal_button_select_field(13)
         )
-        button_change_field19 = Button(
+        button_field19 = Button(
             position=Position(765, 310),
             size=(230, 70),
             text="Изменить размер на 19x19",
             active_color=(160, 10, 50),
             inactive_color=(230, 230, 230),
-            function=lambda: self.__signal_button_select_field(19),
+            function=lambda: self.__signal_button_select_field(19)
         )
+        interface_drawable_interface: list[IDrawable] = [
+            button_field9,
+            button_field13,
+            button_field19
+        ]
         while True:
             surface.fill((255, 255, 255))
             self._poll_events()
-            self.check_click()
-            self._computer_move()
-            self.draw(surface)
-            button_refresh.draw(surface)
-            button_exit.draw(surface)
-            button_change_field9.draw(surface)
-            button_change_field13.draw(surface)
-            button_change_field19.draw(surface)
-            self._board.check_rules()
+            if self._initialization_step == 0:
+                for e in interface_drawable_interface:
+                    e.draw(surface)
+            elif self._initialization_step == 1:
+                pass
+            elif self._initialization_step == 2:
+                self.check_click()
+                self._computer_move()
+                self.draw(surface)
+                button_exit.draw(surface)
+                self._board.check_rules()
             pygame.display.update()
             clock.tick(60)
