@@ -6,6 +6,7 @@ import pygame.freetype
 from pygame import Surface
 
 from board import Board, Position
+from game_condition import GameCondition
 from idrawable import IDrawable
 from widgets.button import Button
 from logger import Logger
@@ -24,16 +25,10 @@ class Game:
     """Главный класс отвечающий за игру"""
 
     def __init__(self) -> None:
-        self._game_mode: int = GameModes.hotseat.value
         self._cell_board = 60  # Размер доски
         self._line_width = 2  # Ширина линий поля
         self._initialization_step = 0
-        self._move_first_player = True
-        self._board = Board(0)
-        self._score = Score()
-        self._player1_score = 0
-        self._player2_score = 0
-
+        self.condition = GameCondition()
         self.logger = Logger()
         self.logger.info("Create Game")
 
@@ -233,35 +228,32 @@ class Game:
         """Заканчивает игру, возвращает в главное меню"""
 
         self.save_score()
+        self._board.reset_removed_stones()
         self._initialization_step = 0
         self.refresh()
 
     def save_score(self) -> None:
         """Сохраняет информацию о результатах игры"""
 
-        count_stones1, count_stones2 = self._board.get_tuple_removed_stones()
-        self._player1_score += count_stones1
-        self._player2_score += count_stones2
-        self._score.add_score(score=self._player1_score)
-        self._score.add_score(score=self._player2_score)
-        self._score.save_scores()
+        removed_stone:tuple[int, int] = self._board.get_tuple_removed_stones()
+        self.condition.add_score(stones_removed=removed_stone)
+        self.condition.save_scores()
 
     def exit(self) -> None:
         """Завершает работу приложения"""
 
         self.finish_game()
         pygame.quit()
-        self.logger.info("Close Game")
+        self.logger.info(message="Close Game")
         exit(0)
 
     def run(self) -> None:
         """Запуск игры"""
 
         pygame.init()
-        self.font = pygame.font.Font("assets\Verdana.ttf", 40)
-
-        self.rock = pygame.image.load("image/rock.png")
-        self.monster = pygame.image.load("image/monster.png")
+        self.font = pygame.font.Font(name="assets\Verdana.ttf", size=40)
+        self.rock = pygame.image.load(filename="image/rock.png")
+        self.monster = pygame.image.load(filename="image/monster.png")
         clock = pygame.time.Clock()
         window_size = (1000, 800)
         surface = pygame.display.set_mode(window_size)
