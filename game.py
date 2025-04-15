@@ -2,12 +2,14 @@ import random
 from enum import Enum
 
 import pygame
+import pygame.freetype
 from pygame import Surface
 
 from board import Board, Position
 from idrawable import IDrawable
 from widgets.button import Button
 from logger import Logger
+from score import Score
 
 
 class GameModes(Enum):
@@ -28,9 +30,10 @@ class Game:
         self._initialization_step = 0
         self._move_first_player = True
         self._board = Board(0)
+        self._score = Score()
+        self._player1_score = 0
+        self._player2_score = 0
 
-        self.rock = pygame.image.load("image/rock.png")
-        self.monster = pygame.image.load("image/monster.png")
         self.logger = Logger()
         self.logger.info("Create Game")
 
@@ -71,9 +74,46 @@ class Game:
                 index_y = self._cell_board + x * self._cell_board - self.FIGURE_SIZE // 2
 
                 if self._board[x][y] == 1:
-                    surface.blit(self.stone_black, (index_x, index_y))
+                    surface.blit(
+                        source=self.stone_black,
+                        dest=(index_x, index_y)
+                    )
                 else:
-                    surface.blit(self.stone_white, (index_x, index_y))
+                    surface.blit(
+                        source=self.stone_white,
+                        dest=(index_x, index_y)
+                    )
+        self.draw_table(surface)
+
+    def draw_table(self, surface: Surface) -> None:
+        """Рисует таблицу рекордов"""
+
+        offset = 150
+        count = 1
+        text = self.font.render(
+            f"Records:",
+            True,
+            (0, 0, 0),
+        )
+        surface.blit(
+            source=text,
+            dest=(770, offset)
+        )
+        offset += 35
+        for scores in self._score.table_score:
+            if scores:
+                # Тут не поддерживаются именованные аргументы
+                text = self.font.render(
+                    f"{count} - {scores}",
+                    True,
+                    (0, 0, 0),
+                )
+                surface.blit(
+                    source=text,
+                    dest=(770, offset)
+                )
+                offset += 35
+                count += 1
 
     def _computer_move(self) -> None:
         """Делает ход за компьютер"""
@@ -105,8 +145,8 @@ class Game:
         position = self._cell_board - (self._cell_board - self._line_width) / 2
 
         if (
-            min(mouse_pos.x, mouse_pos.y) < position
-            or max(mouse_pos.x, mouse_pos.y) >= position * 2 * self._board.size
+                min(mouse_pos.x, mouse_pos.y) < position
+                or max(mouse_pos.x, mouse_pos.y) >= position * 2 * self._board.size
         ):
             return
 
@@ -115,8 +155,8 @@ class Game:
             round((mouse_pos.y - self._cell_board) / self._cell_board))
 
         if not (
-            0 <= current_position.x < self._board.size and
-            0 <= current_position.y < self._board.size
+                0 <= current_position.x < self._board.size and
+                0 <= current_position.y < self._board.size
         ):
             return
 
@@ -126,15 +166,19 @@ class Game:
         """Делает ход за текущего игрока"""
 
         if self._board.check_rock(
-            Position(
-                pos.y,
-                pos.x
-            )
+                Position(
+                    pos.y,
+                    pos.x
+                )
         ):
             return False
 
         self._move_first_player = not self._move_first_player
         self._board.add_rock(pos, self._move_first_player + 1)
+        if self._move_first_player:
+            self._player2_score += 1
+        else:
+            self._player1_score += 1
         self.logger.info(
             f"The player {int(self._move_first_player) + 1} made a move on the position "
             f"({pos.x}, {pos.y})"
@@ -185,15 +229,27 @@ class Game:
                 self._board.add_rock(Position(x, y), 0)
         self.logger.info("Field Refresh")
 
-    def finish_game(self):
+    def finish_game(self) -> None:
         """Заканчивает игру, возвращает в главное меню"""
 
+        self.save_score()
         self._initialization_step = 0
         self.refresh()
+
+    def save_score(self) -> None:
+        """Сохраняет информацию о результатах игры"""
+
+        count_stones1, count_stones2 = self._board.get_tuple_removed_stones()
+        self._player1_score += count_stones1
+        self._player2_score += count_stones2
+        self._score.add_score(score=self._player1_score)
+        self._score.add_score(score=self._player2_score)
+        self._score.save_scores()
 
     def exit(self) -> None:
         """Завершает работу приложения"""
 
+        self.finish_game()
         pygame.quit()
         self.logger.info("Close Game")
         exit(0)
@@ -202,6 +258,10 @@ class Game:
         """Запуск игры"""
 
         pygame.init()
+        self.font = pygame.font.Font("assets\Verdana.ttf", 40)
+
+        self.rock = pygame.image.load("image/rock.png")
+        self.monster = pygame.image.load("image/monster.png")
         clock = pygame.time.Clock()
         window_size = (1000, 800)
         surface = pygame.display.set_mode(window_size)

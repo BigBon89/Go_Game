@@ -13,6 +13,8 @@ class Board:
     def __init__(self, size: int) -> None:
         self._size = size
         self.__game_field = [[0] * self._size for _ in range(self._size)]
+        self._removed_stones_player1 = 0
+        self._removed_stones_player2 = 0
 
     @property
     def size(self) -> int:
@@ -21,6 +23,14 @@ class Board:
     @property
     def game_field(self) -> list[list[int]]:
         return self.__game_field
+
+    @property
+    def removed_stones_player1(self) -> int:
+        return self._removed_stones_player1
+
+    @property
+    def removed_stones_player2(self) -> int:
+        return self._removed_stones_player2
 
     def check_rules(self) -> None:
         """
@@ -34,13 +44,22 @@ class Board:
                     continue
                 if self.has_void(group):
                     continue
+
+                player = self.__game_field[group[0].x][group[0].y]
                 for cell in group:
                     self.__game_field[cell[0]][cell[1]] = 0
+                if player == 1:
+                    self._removed_stones_player1 += len(group)
+                elif player == 2:
+                    self._removed_stones_player2 += len(group)
+                print(self._removed_stones_player1, " - 1")
+                print(self._removed_stones_player2, " - 2")
 
     def has_void(self, group: list[Position]) -> bool:
         """
         Проверяет есть ли пустые соседние клетки у группы камней
         """
+
         for pos in group:
             poses = [
                 Position(pos.x + 1, pos.y),
@@ -60,9 +79,7 @@ class Board:
                     return True
         return False
 
-    def get_group(
-            self, rock_coordinate: Position
-    ) -> Optional[list[Position]]:
+    def get_group(self, rock_coordinate: Position) -> Optional[list[Position]]:
         """
         Возвращает список координат клеток одной группы
         """
@@ -93,7 +110,6 @@ class Board:
                         or new_pos.x >= self._size
                         or new_pos.y < 0
                         or new_pos.y >= self._size
-
                 ):
                     continue
                 if self.__game_field[new_pos.x][new_pos.y] == player_id:
@@ -112,3 +128,14 @@ class Board:
         """Добавляет камень конкретного игрока на заданные координаты"""
 
         self.__game_field[position.y][position.x] = move
+
+    def get_tuple_removed_stones(self) -> tuple:
+        """Возвращает счетчики удаленных камней"""
+        return (self._removed_stones_player1,
+                self._removed_stones_player2)
+
+    def reset_removed_stones(self) -> None:
+        """Сбрасывает счетчик удаленных камней"""
+
+        self._removed_stones_player1 = 0
+        self._removed_stones_player2 = 0
