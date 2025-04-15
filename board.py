@@ -37,8 +37,8 @@ class Board:
         Проверяет правила игры
         """
 
-        for x in range(self._size - 1):
-            for y in range(self._size - 1):
+        for x in range(self._size):
+            for y in range(self._size):
                 group = self.get_group(Position(x, y))
                 if group is None:
                     continue
@@ -52,8 +52,6 @@ class Board:
                     self._removed_stones_player1 += len(group)
                 elif player == 2:
                     self._removed_stones_player2 += len(group)
-                print(self._removed_stones_player1, " - 1")
-                print(self._removed_stones_player2, " - 2")
 
     def has_void(self, group: list[Position]) -> bool:
         """
@@ -86,23 +84,23 @@ class Board:
 
         result = []
         visited = set()
-        player_id = self.__game_field[rock_coordinate[0]][rock_coordinate[1]]
+        player_id = self.__game_field[rock_coordinate.x][rock_coordinate.y]
         if player_id == 0:
             return None
-        q: Queue[Position] = Queue()
-        q.put(rock_coordinate)
+        queue: Queue[Position] = Queue()
+        queue.put(rock_coordinate)
 
-        while not q.empty():
-            pos = q.get()
-            if pos in visited:
+        while not queue.empty():
+            position = queue.get()
+            if position in visited:
                 continue
-            visited.add(pos)
-            result.append(pos)
+            visited.add(position)
+            result.append(position)
             poses = [
-                Position(pos.x + 1, pos.y),
-                Position(pos.x - 1, pos.y),
-                Position(pos.x, pos.y + 1),
-                Position(pos.x, pos.y - 1)
+                Position(position.x + 1, position.y),
+                Position(position.x - 1, position.y),
+                Position(position.x, position.y + 1),
+                Position(position.x, position.y - 1)
             ]
             for new_pos in poses:
                 if (
@@ -113,7 +111,7 @@ class Board:
                 ):
                     continue
                 if self.__game_field[new_pos.x][new_pos.y] == player_id:
-                    q.put(new_pos)
+                    queue.put(new_pos)
         return result
 
     def __getitem__(self, index: int) -> list[int]:
