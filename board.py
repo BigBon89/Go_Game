@@ -129,6 +129,7 @@ class Board:
 
     def get_tuple_removed_stones(self) -> tuple:
         """Возвращает счетчики удаленных камней"""
+
         return (self._removed_stones_player1,
                 self._removed_stones_player2)
 
