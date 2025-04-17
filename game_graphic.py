@@ -6,16 +6,15 @@ from score import Score
 
 
 class GameGraphic:
-    def __init__(self, state: GameState, score: Score) -> None:
+    def __init__(self, state: GameState, score: Score, filename1: str, filename2: str) -> None:
         self.state = state
         self.score = score
-        self.font = pygame.font.Font("assets/Verdana.ttf", 40)
-        self.rock = pygame.image.load("image/rock.png")
-        self.monster = pygame.image.load("image/monster.png")
+        self.font = pygame.font.Font("assets/Verdana.ttf",40)
+        self.rock = pygame.image.load(filename1)
+        self.monster = pygame.image.load(filename2)
 
         self.stone_black = None
         self.stone_white = None
-
 
     def draw(self, surface: Surface) -> None:
         """Отрисовка игрового поля, камней, таблицы рекордов"""
@@ -77,22 +76,14 @@ class GameGraphic:
 
         offset = 150
         # Тут не поддерживаются именованные аргументы
-        text = self.font.render(
-            f"Records:",
-            True,
-            (0, 0, 0),
-        )
+        text = self.font.render(f"Records:", True, (0, 0, 0), )
         surface.blit(
             source=text,
             dest=(770, offset)
         )
         offset += 35
         for i, score in enumerate(self.score.table_score, start=1):
-            text = self.font.render(
-                f"{i} - {score}",
-                True,
-                (0, 0, 0),
-            )
+            text = self.font.render(f"{i} - {score}", True, (0, 0, 0),)
             surface.blit(
                 source=text,
                 dest=(770, offset)

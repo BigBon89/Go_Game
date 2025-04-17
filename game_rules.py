@@ -2,7 +2,7 @@ import random
 
 import pygame
 
-from board import Position
+from position import Position
 from game_modes import GameModes
 from game_state import GameState
 from logger import Logger

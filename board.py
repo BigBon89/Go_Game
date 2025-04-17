@@ -1,10 +1,7 @@
 from queue import Queue
-from typing import Optional, NamedTuple
+from typing import Optional
 
-
-class Position(NamedTuple):
-    x: int
-    y: int
+from position import Position
 
 
 class Board:
@@ -13,24 +10,19 @@ class Board:
     def __init__(self, size: int) -> None:
         self._size = size
         self.__game_field = [[0] * self._size for _ in range(self._size)]
-        self._removed_stones_player1 = 0
-        self._removed_stones_player2 = 0
+        self._removed_stones_player = [0, 0]
 
     @property
     def size(self) -> int:
+        """Возвращает размер игрового поля"""
+
         return self._size
 
     @property
     def game_field(self) -> list[list[int]]:
+        """Возвращает игровое поле"""
+
         return self.__game_field
-
-    @property
-    def removed_stones_player1(self) -> int:
-        return self._removed_stones_player1
-
-    @property
-    def removed_stones_player2(self) -> int:
-        return self._removed_stones_player2
 
     def check_rules(self) -> None:
         """
@@ -49,9 +41,9 @@ class Board:
                 for cell in group:
                     self.__game_field[cell[0]][cell[1]] = 0
                 if player == 1:
-                    self._removed_stones_player1 += len(group)
+                    self._removed_stones_player[0] += len(group)
                 elif player == 2:
-                    self._removed_stones_player2 += len(group)
+                    self._removed_stones_player[1] += len(group)
 
     def has_void(self, group: list[Position]) -> bool:
         """
@@ -130,11 +122,10 @@ class Board:
     def get_tuple_removed_stones(self) -> tuple:
         """Возвращает счетчики удаленных камней"""
 
-        return (self._removed_stones_player1,
-                self._removed_stones_player2)
+        return self._removed_stones_player[0], self._removed_stones_player[1]
 
     def reset_removed_stones(self) -> None:
         """Сбрасывает счетчик удаленных камней"""
 
-        self._removed_stones_player1 = 0
-        self._removed_stones_player2 = 0
+        self._removed_stones_player[0] = 0
+        self._removed_stones_player[1] = 0

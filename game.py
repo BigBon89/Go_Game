@@ -1,7 +1,8 @@
 import pygame
 import pygame.freetype
 
-from board import Board, Position
+from board import Board
+from position import Position
 from game_graphic import GameGraphic
 from game_modes import GameModes
 from game_rules import GameRules
@@ -25,8 +26,13 @@ class Game:
 
         self.score = Score()
         self.state = GameState()
-        self.rules = GameRules(self.state, self.logger)
-        self.graphic = GameGraphic(self.state, self.score)
+        self.rules = GameRules(state=self.state,
+                               logger=self.logger)
+        self.graphic = GameGraphic(state=self.state,
+                                   score=self.score,
+                                   filename1="image/rock.png",
+                                   filename2="image/monster.png"
+                                   )
 
 
     def _poll_events(self) -> None:
