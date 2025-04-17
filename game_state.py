@@ -12,7 +12,6 @@ class GameState:
         self.move_first_player = True
         self.board = Board(0)
         self.scoreboard = Score()
-        self.player_scores = [0, 0]
         self.figure_size = None
 
     def characteristics_field(self, size: int) -> None:

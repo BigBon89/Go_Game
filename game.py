@@ -2,11 +2,15 @@ import pygame
 import pygame.freetype
 
 from board import Board
+from logger import Logger
 from position import Position
 from game_graphic import GameGraphic
 from game_modes import GameModes
 from game_rules import GameRules
 from game_state import GameState
+from score import Score
+from widgets.button import Button
+
 
 class Game:
     """Главный класс, отвечающий за игру"""
@@ -30,7 +34,6 @@ class Game:
                                    filename1="image/rock.png",
                                    filename2="image/monster.png"
                                    )
-
 
     def _poll_events(self) -> None:
         """Обработка событий окна"""
@@ -65,10 +68,20 @@ class Game:
     def finish_game(self) -> None:
         """Выход главное"""
 
-        self.score.save_scores()
+        self._save_scores()
         self.initialization_step = 0
         self.refresh()
 
+    def _save_scores(self) -> None:
+        """Сохранение текущих очков"""
+
+        score_removed = self.state.board.get_count_score()
+        score_first_player = score_removed[0]
+        score_second_player = score_removed[1]
+        self.score.add_score(score_first_player)
+        self.score.add_score(score_second_player)
+        self.score.save_scores()
+        self.state.board.reset_removed_stones()
 
     def exit(self) -> None:
         """Выход из приложения"""

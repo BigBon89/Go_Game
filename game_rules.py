@@ -54,10 +54,6 @@ class GameRules:
 
         self.state.move_first_player = not self.state.move_first_player
         self.state.board.add_rock(pos, self.state.move_first_player + 1)
-        if self.state.move_first_player:
-            self.state.player_scores[1] += 1
-        else:
-            self.state.player_scores[0] += 1
         self.logger.info(
             f"The player {int(self.state.move_first_player) + 1} made a move on the position "
             f"({pos.x}, {pos.y})"

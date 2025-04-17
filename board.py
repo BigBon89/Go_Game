@@ -11,6 +11,7 @@ class Board:
         self._size = size
         self.__game_field = [[0] * self._size for _ in range(self._size)]
         self._removed_stones_player = [0, 0]
+        self._score_stone_player = [0, 0]
 
     @property
     def size(self) -> int:
@@ -116,7 +117,10 @@ class Board:
 
     def add_rock(self, position: Position, move: int) -> None:
         """Добавляет камень конкретного игрока на заданные координаты"""
-
+        if move == 1:
+            self._score_stone_player[0] += 1
+        elif move == 2:
+            self._score_stone_player[1] += 1
         self.__game_field[position.y][position.x] = move
 
     def get_tuple_removed_stones(self) -> tuple:
@@ -129,3 +133,7 @@ class Board:
 
         self._removed_stones_player[0] = 0
         self._removed_stones_player[1] = 0
+
+    def get_count_score(self) -> tuple[int, int]:
+        return (self._removed_stones_player[0] + self._score_stone_player[0],
+                self._removed_stones_player[1] + self._score_stone_player[1])
