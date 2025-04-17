@@ -1,3 +1,4 @@
+import copy
 import random
 
 import pygame
@@ -27,8 +28,8 @@ class GameRules:
         if 0 <= current_pos.x < self.state.board.size and 0 <= current_pos.y < self.state.board.size:
             self.make_move(current_pos)
 
-    def computer_move(self) -> None:
-        """Делает ход за компьютер"""
+    def random_computer_move(self) -> None:
+        """Делает случайный ход за компьютер"""
 
         if self.state.move_first_player or self.state.game_mode == GameModes.hotseat.value:
             return
@@ -60,3 +61,33 @@ class GameRules:
         )
         return True
 
+    def smart_computer_move(self) -> None:
+        """Компьютер делает более умные ходы"""
+
+        if self.state.move_first_player or self.state.game_mode != GameModes.computer_smart.value:
+            return
+
+        for x in range(self.state.board.size):
+            for y in range(self.state.board.size):
+                pos = Position(x, y)
+                if self.state.board.check_rock(Position(x, y)):
+                    continue
+
+                if self._simulate_move(pos) > 0:
+                    self.make_move(pos)
+                    return
+        self.random_computer_move()
+
+    def _simulate_move(self, pos: Position) -> int:
+        """Симулирует ход компьютера"""
+
+        copy_board = copy.deepcopy(self.state.board)
+        current_removed = self.state.board.get_tuple_removed_stones()[0]
+
+        copy_board.add_rock(pos, 2)
+        copy_board.check_rules()
+        new_removed = copy_board.get_tuple_removed_stones()[0]
+
+        difference = new_removed - current_removed
+
+        return difference

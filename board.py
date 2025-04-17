@@ -117,6 +117,7 @@ class Board:
 
     def add_rock(self, position: Position, move: int) -> None:
         """Добавляет камень конкретного игрока на заданные координаты"""
+
         if move == 1:
             self._score_stone_player[0] += 1
         elif move == 2:

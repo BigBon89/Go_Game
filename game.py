@@ -136,7 +136,11 @@ class Game:
                     e.draw(self.surface)
             elif self.initialization_step == 2:
                 self.rules.check_click()
-                self.rules.computer_move()
+                if self.state.game_mode == GameModes.computer_random.value:
+                    self.rules.random_computer_move()
+                elif self.state.game_mode == GameModes.computer_smart.value:
+                    self.rules.smart_computer_move()
+
                 self.graphic.draw(self.surface)
                 buttons["exit"].draw(self.surface)
                 self.state.board.check_rules()
