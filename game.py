@@ -7,15 +7,12 @@ from game_graphic import GameGraphic
 from game_modes import GameModes
 from game_rules import GameRules
 from game_state import GameState
-from widgets.button import Button
-from logger import Logger
-from score import Score
-
 
 class Game:
     """Главный класс, отвечающий за игру"""
 
     def __init__(self) -> None:
+
         pygame.init()
         self.logger = Logger()
         self.logger.info("Create Game")
@@ -72,6 +69,7 @@ class Game:
         self.initialization_step = 0
         self.refresh()
 
+
     def exit(self) -> None:
         """Выход из приложения"""
 
@@ -82,7 +80,6 @@ class Game:
 
     def run(self) -> None:
         """Запуск игры"""
-
 
         pos_y = [155, 230, 310]
         buttons = {
