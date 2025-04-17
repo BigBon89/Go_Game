@@ -2,6 +2,8 @@ from board import Board
 from game_modes import GameModes
 from score import Score
 
+CHARACTERISTIC_BOARD = 650
+
 
 class GameState:
     def __init__(self) -> None:
@@ -17,5 +19,5 @@ class GameState:
     def characteristics_field(self, size: int) -> None:
         """Установка характеристик поля"""
 
-        self.cell_board = 650 // (size - 1)
+        self.cell_board = CHARACTERISTIC_BOARD // (size - 1)
         self.figure_size = int(self.cell_board * 0.9)

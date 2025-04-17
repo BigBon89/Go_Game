@@ -1,5 +1,5 @@
 class Score:
-    def __init__(self, file_path: str = "scoretable.txt", max_records: int = 10) -> None:
+    def __init__(self,  max_records: int = 10, file_path: str = "scoretable.txt") -> None:
         self.file_name = file_path
         self.table_score: list[int] = []
         self._load_scores()
