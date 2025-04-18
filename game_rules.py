@@ -102,5 +102,3 @@ class GameRules:
         after = copy_board.get_tuple_removed_stones()[move % 2]
 
         return after - before
-
-

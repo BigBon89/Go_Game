@@ -124,7 +124,7 @@ class Board:
             self._score_stone_player[1] += 1
         self.__game_field[position.y][position.x] = move
 
-    def get_tuple_removed_stones(self) -> tuple:
+    def get_tuple_removed_stones(self) -> tuple[int, int]:
         """Возвращает счетчики удаленных камней"""
 
         return self._removed_stones_player[0], self._removed_stones_player[1]

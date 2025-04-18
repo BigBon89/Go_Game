@@ -14,7 +14,7 @@ class GameState:
         self.move_first_player = True
         self.board = Board(0)
         self.scoreboard = Score()
-        self.figure_size = None
+        self.figure_size = 0
 
     def characteristics_field(self, size: int) -> None:
         """Установка характеристик поля"""

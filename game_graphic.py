@@ -9,7 +9,7 @@ class GameGraphic:
     def __init__(self, state: GameState, score: Score, filename1: str, filename2: str) -> None:
         self.state = state
         self.score = score
-        self.font = pygame.font.Font("assets/Verdana.ttf",40)
+        self.font = pygame.font.Font("assets/Verdana.ttf", 40)
         self.rock = pygame.image.load(filename1)
         self.monster = pygame.image.load(filename2)
 
@@ -76,7 +76,7 @@ class GameGraphic:
 
         offset = 150
         # Тут не поддерживаются именованные аргументы
-        text = self.font.render(f"Records:", True, (0, 0, 0), )
+        text = self.font.render("Records:", True, (0, 0, 0), )
         surface.blit(
             source=text,
             dest=(770, offset)

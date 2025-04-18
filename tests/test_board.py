@@ -65,6 +65,7 @@ def test_has_void_false_because_die(data: Board) -> None:
     data.check_rules()
     assert not data.check_rock(Position(2, 2))
 
+
 def test_get_count_score(data: Board) -> None:
     data.add_rock(Position(1, 1), 1)
     data.add_rock(Position(0, 1), 2)
