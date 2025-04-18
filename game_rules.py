@@ -8,6 +8,7 @@ from game_modes import GameModes
 from game_state import GameState
 from logger import Logger
 
+
 class GameRules:
     def __init__(self, state: GameState, logger: Logger):
         self.state = state
@@ -73,20 +74,29 @@ class GameRules:
                 if self.state.board.check_rock(Position(x, y)):
                     continue
 
-                if self._simulate_move(pos) > 0:
+                if self._simulate_move(pos=pos, move=2) > 0:
+                    self.make_move(pos)
+                    return
+        for x in range(self.state.board.size):
+            for y in range(self.state.board.size):
+                pos = Position(x, y)
+                if self.state.board.check_rock(Position(x, y)):
+                    continue
+
+                if self._simulate_move(pos=pos, move=1) > 0:
                     self.make_move(pos)
                     return
         self.random_computer_move()
 
-    def _simulate_move(self, pos: Position) -> int:
-        """Симулирует ход компьютера"""
+    def _simulate_move(self, pos: Position, move: int) -> int:
+        """Симулирует ход"""
 
         copy_board = copy.deepcopy(self.state.board)
-        current_removed = self.state.board.get_tuple_removed_stones()[0]
+        current_removed = self.state.board.get_tuple_removed_stones()[move % 2]
 
-        copy_board.add_rock(pos, 2)
+        copy_board.add_rock(pos, move)
         copy_board.check_rules()
-        new_removed = copy_board.get_tuple_removed_stones()[0]
+        new_removed = copy_board.get_tuple_removed_stones()[move % 2]
 
         difference = new_removed - current_removed
 
