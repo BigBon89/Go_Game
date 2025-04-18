@@ -35,13 +35,15 @@ class GameRules:
         if self.state.move_first_player or self.state.game_mode == GameModes.hotseat.value:
             return
 
-        while True:
+        count = 0
+        while count < 1000:
             position = Position(
                 random.randint(0, self.state.board.size - 1),
                 random.randint(0, self.state.board.size - 1),
             )
             if self.make_move(position):
                 break
+            count += 1
 
     def make_move(self, pos: Position) -> bool:
         """Делает ход за текущего игрока"""
@@ -53,13 +55,14 @@ class GameRules:
                 )
         ):
             return False
-
-        self.state.move_first_player = not self.state.move_first_player
-        self.state.board.add_rock(pos, self.state.move_first_player + 1)
+        player_id = int(self.state.move_first_player) + 1
+        self.state.board.add_rock(pos, player_id)
         self.logger.info(
             f"The player {int(self.state.move_first_player) + 1} made a move on the position "
             f"({pos.x}, {pos.y})"
         )
+        self.state.move_first_player = not self.state.move_first_player
+
         return True
 
     def smart_computer_move(self) -> None:
@@ -92,12 +95,12 @@ class GameRules:
         """Симулирует ход"""
 
         copy_board = copy.deepcopy(self.state.board)
-        current_removed = self.state.board.get_tuple_removed_stones()[move % 2]
-
         copy_board.add_rock(pos, move)
+
+        before = copy_board.get_tuple_removed_stones()[move % 2]
         copy_board.check_rules()
-        new_removed = copy_board.get_tuple_removed_stones()[move % 2]
+        after = copy_board.get_tuple_removed_stones()[move % 2]
 
-        difference = new_removed - current_removed
+        return after - before
 
-        return difference
+
