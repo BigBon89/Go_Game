@@ -18,22 +18,22 @@ class Game:
     def __init__(self) -> None:
 
         pygame.init()
-        self.logger = Logger()
-        self.logger.info("Create Game")
-        self.initialization_step = 0
+        self._logger = Logger()
+        self._logger.info("Create Game")
+        self._initialization_step = 0
 
-        self.surface = pygame.display.set_mode((1000, 800))
-        self.clock = pygame.time.Clock()
+        self._surface = pygame.display.set_mode((1000, 800))
+        self._clock = pygame.time.Clock()
 
-        self.score = Score()
-        self.state = GameState()
-        self.rules = GameRules(state=self.state,
-                               logger=self.logger)
-        self.graphic = GameGraphic(state=self.state,
-                                   score=self.score,
-                                   filename1="image/rock.png",
-                                   filename2="image/monster.png"
-                                   )
+        self._score = Score()
+        self.__state = GameState()
+        self._rules = GameRules(state=self.__state,
+                                logger=self._logger)
+        self._graphic = GameGraphic(state=self.__state,
+                                    score=self._score,
+                                    filename1="image/rock.png",
+                                    filename2="image/monster.png"
+                                    )
 
     def _poll_events(self) -> None:
         """Обработка событий окна"""
@@ -45,50 +45,50 @@ class Game:
     def _select_field(self, size: int) -> None:
         """Выбор параметров для поля"""
 
-        self.state.board = Board(size)
-        self.state.characteristics_field(size)
-        self.initialization_step = 1
-        self.logger.info(f"Field size set to {size}x{size}")
+        self.__state.board = Board(size)
+        self.__state.characteristics_field(size)
+        self._initialization_step = 1
+        self._logger.info(f"Field size set to {size}x{size}")
 
     def _select_gamemode(self, gamemode: int) -> None:
         """Выбор игрового режима"""
 
-        self.state.game_mode = gamemode
-        self.initialization_step = 2
-        self.logger.info(f"Game mode select to {gamemode}")
+        self.__state.__game_mode = gamemode
+        self._initialization_step = 2
+        self._logger.info(f"Game mode select to {gamemode}")
 
     def refresh(self) -> None:
         """Обнуляет игровое поле"""
 
-        for x in range(self.state.board.size):
-            for y in range(self.state.board.size):
-                self.state.board.add_rock(Position(x, y), 0)
-        self.logger.info("Board refreshed")
+        for x in range(self.__state.board.size):
+            for y in range(self.__state.board.size):
+                self.__state.board.add_rock(Position(x, y), 0)
+        self._logger.info("Board refreshed")
 
     def finish_game(self) -> None:
         """Выход главное"""
 
         self._save_scores()
-        self.initialization_step = 0
+        self._initialization_step = 0
         self.refresh()
 
     def _save_scores(self) -> None:
         """Сохранение текущих очков"""
 
-        score_removed = self.state.board.get_count_score()
+        score_removed = self.__state.board.get_count_score()
         score_first_player = score_removed[0]
         score_second_player = score_removed[1]
-        self.score.add_score(score_first_player)
-        self.score.add_score(score_second_player)
-        self.score.save_scores()
-        self.state.board.reset_removed_stones()
+        self._score.add_score(score_first_player)
+        self._score.add_score(score_second_player)
+        self._score.save_scores()
+        self.__state.board.reset_removed_stones()
 
     def exit(self) -> None:
         """Выход из приложения"""
 
         self.finish_game()
         pygame.quit()
-        self.logger.info("Close Game")
+        self._logger.info("Close Game")
         exit()
 
     def run(self) -> None:
@@ -123,25 +123,25 @@ class Game:
                              function=self.finish_game)
 
         while True:
-            self.surface.fill((255, 255, 255))
+            self._surface.fill((255, 255, 255))
             self._poll_events()
 
-            if self.initialization_step == 0:
+            if self._initialization_step == 0:
                 for e in fields_buttons:
-                    e.draw(self.surface)
-            elif self.initialization_step == 1:
+                    e.draw(self._surface)
+            elif self._initialization_step == 1:
                 for e in modes_buttons:
-                    e.draw(self.surface)
-            elif self.initialization_step == 2:
-                self.rules.check_click()
-                if self.state.game_mode == GameModes.computer_random.value:
-                    self.rules.random_computer_move()
-                elif self.state.game_mode == GameModes.computer_smart.value:
-                    self.rules.smart_computer_move()
+                    e.draw(self._surface)
+            elif self._initialization_step == 2:
+                self._rules.check_click()
+                if self.__state.game_mode == GameModes.computer_random.value:
+                    self._rules.random_computer_move()
+                elif self.__state.game_mode == GameModes.computer_smart.value:
+                    self._rules.smart_computer_move()
 
-                self.graphic.draw(self.surface)
-                exit_button.draw(self.surface)
-                self.state.board.check_rules()
+                self._graphic.draw(self._surface)
+                exit_button.draw(self._surface)
+                self.__state.board.check_rules()
 
             pygame.display.update()
-            self.clock.tick(60)
+            self._clock.tick(60)
