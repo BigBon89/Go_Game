@@ -33,7 +33,7 @@ def test_get_group_a_few_stone(data: Board) -> None:
         data.add_rock(pos, 1)
 
     group = data.get_group(Position(1, 1))
-    assert set(group) == set(stones)
+    assert group is not None and set(group) == set(stones)
 
 
 def test_has_void_true(data: Board) -> None:

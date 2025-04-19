@@ -36,8 +36,8 @@ class Button(IDrawable):
         return self._position
 
     @position.setter
-    def position(self, position: tuple[int, int]) -> None:
-        if position[0] < 0 or position[1] < 0:
+    def position(self, position: Position) -> None:
+        if position.x < 0 or position.y < 0:
             raise ValueError("Координаты x и y не могут быть отрицательными")
         self._position = position
 

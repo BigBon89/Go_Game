@@ -136,5 +136,7 @@ class Board:
         self._removed_stones_player[1] = 0
 
     def get_count_score(self) -> tuple[int, int]:
+        """Возвращает счет игроков"""
+
         return (self._removed_stones_player[1] + self._score_stone_player[0],
                 self._removed_stones_player[0] + self._score_stone_player[1])

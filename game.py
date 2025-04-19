@@ -95,44 +95,42 @@ class Game:
         """Запуск игры"""
 
         pos_y = [155, 230, 310]
-        buttons = {
-            "exit": Button(position=Position(775, 0),
-                           size=(70, 70),
-                           text="Выйти",
-                           active_color=(160, 10, 50),
-                           inactive_color=(230, 230, 230),
-                           function=self.finish_game),
-            "fields": [
-                Button(position=Position(765, y),
-                       size=(230, 70),
-                       text=f"Размер поля {size}x{size}",
-                       active_color=(160, 10, 50),
-                       inactive_color=(230, 230, 230),
-                       function=lambda s=size: self._select_field(s)
-                       )
-                for y, size in zip(pos_y, [9, 13, 19])
-            ],
-            "modes": [
-                Button(position=Position(765, y),
-                       size=(230, 70),
-                       text=f"Режим игры {mode.name}",
-                       active_color=(160, 10, 50),
-                       inactive_color=(230, 230, 230),
-                       function=lambda m=mode.value: self._select_gamemode(m)
-                       )
-                for y, mode in zip(pos_y, GameModes)
-            ]
-        }
+        fields_buttons = [
+            Button(position=Position(765, y),
+                   size=(230, 70),
+                   text=f"Размер поля {size}x{size}",
+                   active_color=(160, 10, 50),
+                   inactive_color=(230, 230, 230),
+                   function=lambda s=size: self._select_field(s))
+            for y, size in zip(pos_y, [9, 13, 19])
+        ]
+
+        modes_buttons = [
+            Button(position=Position(765, y),
+                   size=(230, 70),
+                   text=f"Режим игры {mode.name}",
+                   active_color=(160, 10, 50),
+                   inactive_color=(230, 230, 230),
+                   function=lambda m=mode.value: self._select_gamemode(m))
+            for y, mode in zip(pos_y, GameModes)
+        ]
+
+        exit_button = Button(position=Position(775, 0),
+                             size=(70, 70),
+                             text="Выйти",
+                             active_color=(160, 10, 50),
+                             inactive_color=(230, 230, 230),
+                             function=self.finish_game)
 
         while True:
             self.surface.fill((255, 255, 255))
             self._poll_events()
 
             if self.initialization_step == 0:
-                for e in buttons["fields"]:
+                for e in fields_buttons:
                     e.draw(self.surface)
             elif self.initialization_step == 1:
-                for e in buttons["modes"]:
+                for e in modes_buttons:
                     e.draw(self.surface)
             elif self.initialization_step == 2:
                 self.rules.check_click()
@@ -142,7 +140,7 @@ class Game:
                     self.rules.smart_computer_move()
 
                 self.graphic.draw(self.surface)
-                buttons["exit"].draw(self.surface)
+                exit_button.draw(self.surface)
                 self.state.board.check_rules()
 
             pygame.display.update()

@@ -1,3 +1,5 @@
+from typing import Optional
+
 import pygame
 from pygame import Surface
 
@@ -13,8 +15,8 @@ class GameGraphic:
         self.rock = pygame.image.load(filename1)
         self.monster = pygame.image.load(filename2)
 
-        self.stone_black = None
-        self.stone_white = None
+        self.stone_black: Optional[Surface] = None
+        self.stone_white: Optional[Surface] = None
 
     def draw(self, surface: Surface) -> None:
         """Отрисовка игрового поля, камней, таблицы рекордов"""
@@ -66,10 +68,8 @@ class GameGraphic:
                     pictures = self.stone_black
                 else:
                     pictures = self.stone_white
-                surface.blit(
-                    source=pictures,
-                    dest=(index_x, index_y)
-                )
+                surface.blit(source=pictures,
+                             dest=(index_x, index_y))
 
     def _draw_score_table(self, surface: Surface) -> None:
         """Отрисовка таблицы рекордов"""
@@ -83,7 +83,7 @@ class GameGraphic:
         )
         offset += 35
         for i, score in enumerate(self.score.table_score, start=1):
-            text = self.font.render(f"{i} - {score}", True, (0, 0, 0),)
+            text = self.font.render(f"{i} - {score}", True, (0, 0, 0), )
             surface.blit(
                 source=text,
                 dest=(770, offset)
