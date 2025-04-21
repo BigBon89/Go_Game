@@ -37,7 +37,7 @@ class GameRules:
     def random_computer_move(self) -> None:
         """Делает случайный ход за компьютер"""
 
-        if self.__state.move_first_player or self.__state.game_mode == GameModes.hotseat.value:
+        if self.__state.move_first_player or self.__state.game_mode == GameModes.hotseat:
             return
         count = 0
         while True:
@@ -45,8 +45,6 @@ class GameRules:
                 random.randint(0, self.__state.board.size - 1),
                 random.randint(0, self.__state.board.size - 1),
             )
-            print("Рандомный ход")
-            print(position.x, position.y)
             if self.make_move(position):
                 break
             count += 1
@@ -72,7 +70,7 @@ class GameRules:
     def smart_computer_move(self) -> None:
         """Компьютер делает более умные ходы"""
 
-        if self.__state.move_first_player or self.__state.game_mode != GameModes.computer_smart.value:
+        if self.__state.move_first_player or self.__state.game_mode != GameModes.computer_smart:
             return
 
         good_move = [-1, -1]

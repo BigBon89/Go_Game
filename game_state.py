@@ -6,7 +6,7 @@ CHARACTERISTIC_BOARD = 650
 
 class GameState:
     def __init__(self) -> None:
-        self.__game_mode: int = GameModes.hotseat.value
+        self.__game_mode: GameModes = GameModes.hotseat
         self.__cell_board = 60
         self.__line_width = 2
         self.__move_first_player = True

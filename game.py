@@ -50,7 +50,7 @@ class Game:
         self._initialization_step = 1
         self._logger.info(f"Field size set to {size}x{size}")
 
-    def _select_gamemode(self, gamemode: int) -> None:
+    def _select_gamemode(self, gamemode: GameModes) -> None:
         """Выбор игрового режима"""
 
         self.__state.game_mode = gamemode
@@ -110,7 +110,7 @@ class Game:
                    text=f"Режим игры {mode.name}",
                    active_color=Color((160, 10, 50)),
                    inactive_color=Color((230, 230, 230)),
-                   function=lambda m=mode.value: self._select_gamemode(m))
+                   function=lambda m=mode: self._select_gamemode(m))
             for y, mode in zip([90, 370, 650], GameModes)
         ]
 
@@ -133,9 +133,9 @@ class Game:
                     e.draw(self._surface)
             elif self._initialization_step == 2:
                 self._rules.check_click()
-                if self.__state.game_mode == GameModes.computer_random.value:
+                if self.__state.game_mode == GameModes.computer_random:
                     self._rules.random_computer_move()
-                elif self.__state.game_mode == GameModes.computer_smart.value:
+                elif self.__state.game_mode == GameModes.computer_smart:
                     self._rules.smart_computer_move()
 
                 self._graphic.draw(self._surface)
