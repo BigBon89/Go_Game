@@ -49,10 +49,7 @@ class GameRules:
         """Делает ход за текущего игрока"""
 
         if self.__state.board.check_rock(
-                Position(
-                    pos.y,
-                    pos.x
-                )
+                pos.inverted()
         ):
             return False
         player_id = int(self.__state.move_first_player) + 1

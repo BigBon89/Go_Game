@@ -75,7 +75,6 @@ class GameGraphic:
         """Отрисовка таблицы рекордов"""
 
         offset = 150
-        # Тут не поддерживаются именованные аргументы
         text = self._font.render("Records:", True, (0, 0, 0), )
         surface.blit(
             source=text,
