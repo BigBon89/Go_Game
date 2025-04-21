@@ -1,5 +1,4 @@
 from queue import Queue
-from typing import Optional
 
 from position import Position
 
@@ -70,7 +69,7 @@ class Board:
                     return True
         return False
 
-    def get_group(self, rock_coordinate: Position) -> Optional[list[Position]]:
+    def get_group(self, rock_coordinate: Position) -> [list[Position]]:
         """
         Возвращает список координат клеток одной группы
         """

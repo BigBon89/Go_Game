@@ -25,7 +25,7 @@ class Game:
         self._surface = pygame.display.set_mode((1000, 800))
         self._clock = pygame.time.Clock()
 
-        self._score = Score()
+        self._score = Score(self._logger)
         self.__state = GameState()
         self._rules = GameRules(state=self.__state,
                                 logger=self._logger)
@@ -101,7 +101,7 @@ class Game:
                    active_color=(160, 10, 50),
                    inactive_color=(230, 230, 230),
                    function=lambda s=size: self._select_field(s))
-            for y, size in zip([100, 330, 560], [9, 13, 19])
+            for y, size in zip([150, 360, 570], [9, 13, 19])
         ]
 
         modes_buttons = [
@@ -111,7 +111,7 @@ class Game:
                    active_color=(160, 10, 50),
                    inactive_color=(230, 230, 230),
                    function=lambda m=mode.value: self._select_gamemode(m))
-            for y, mode in zip([50, 330, 610], GameModes)
+            for y, mode in zip([90, 370, 650], GameModes)
         ]
 
         exit_button = Button(position=Position(775, 0),

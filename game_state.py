@@ -12,7 +12,6 @@ class GameState:
         self.__line_width = 2
         self.__move_first_player = True
         self.__board = Board(0)
-        self.__scoreboard = Score()
         self.__figure_size = 0
 
     @property

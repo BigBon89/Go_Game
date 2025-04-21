@@ -1,5 +1,14 @@
+from pathlib import Path
+
+from logger import Logger
+
+
 class Score:
-    def __init__(self,  max_records: int = 10, file_path: str = "scoretable.txt") -> None:
+    DEFAULT_FILE_PATH = Path("scoretable.txt")
+    MAX_RECORDS = 10
+
+    def __init__(self, logger: Logger, max_records: int = MAX_RECORDS, file_path: Path = DEFAULT_FILE_PATH) -> None:
+        self._logger = logger
         self.file_name = file_path
         self.table_score: list[int] = []
         self._load_scores()
@@ -9,11 +18,10 @@ class Score:
         try:
             with open(self.file_name, "r", encoding="utf-8") as file:
                 for line in file:
-                    score = line
-                    self.table_score.append(int(score))
+                    self.table_score.append(int(line))
 
         except FileNotFoundError:
-            pass
+            self._logger.info("Файл с рекордами не найден")
 
     def save_scores(self) -> None:
         with open(self.file_name, "w", encoding="utf-8") as file:
