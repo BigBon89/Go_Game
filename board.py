@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from queue import Queue
 
 from position import Position
@@ -24,6 +26,12 @@ class Board:
 
         return self.__game_field
 
+    @game_field.setter
+    def game_field(self, game_field: list[list[int]]) -> None:
+        """Настраивает игровое поле"""
+
+        self.__game_field = game_field
+
     def check_rules(self) -> None:
         """
         Проверяет правила игры
@@ -31,6 +39,8 @@ class Board:
 
         for x in range(self._size):
             for y in range(self._size):
+                if self.__game_field[x][y] == 0:
+                    continue
                 group = self.get_group(Position(x, y))
                 if group is None:
                     continue
@@ -69,7 +79,7 @@ class Board:
                     return True
         return False
 
-    def get_group(self, rock_coordinate: Position) -> [list[Position]]:
+    def get_group(self, rock_coordinate: Position) -> list[Position] | None:
         """
         Возвращает список координат клеток одной группы
         """
@@ -139,3 +149,10 @@ class Board:
 
         return (self._removed_stones_player[1] + self._score_stone_player[0],
                 self._removed_stones_player[0] + self._score_stone_player[1])
+
+    def reset(self) -> None:
+        """Сброс полей"""
+
+        self.__game_field = [[0] * self._size for _ in range(self._size)]
+        self._removed_stones_player = [0, 0]
+        self._score_stone_player = [0, 0]

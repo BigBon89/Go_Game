@@ -28,7 +28,7 @@ class Button(IDrawable):
         self._active_color = active_color
         self._inactive_color = inactive_color
         self.__text = text
-        self._text_object = None
+        self._text_object: Text
         self._set_text_position()
         self.function = function
 

@@ -1,6 +1,5 @@
 from board import Board
 from game_modes import GameModes
-from score import Score
 
 CHARACTERISTIC_BOARD = 650
 
@@ -30,10 +29,9 @@ class GameState:
         return self.__game_mode
 
     @game_mode.setter
-    def game_mode(self, game_mode: GameModes) -> None:
+    def game_mode(self, game_mode: int) -> None:
         """Изменяет режим игры"""
         self.__game_mode = game_mode
-
 
     @property
     def move_first_player(self) -> bool:

@@ -53,7 +53,7 @@ class Game:
     def _select_gamemode(self, gamemode: int) -> None:
         """Выбор игрового режима"""
 
-        self.__state.__game_mode = gamemode
+        self.__state.game_mode = gamemode
         self._initialization_step = 2
         self._logger.info(f"Game mode select to {gamemode}")
 
@@ -98,8 +98,8 @@ class Game:
             Button(position=Position(y, 100),
                    size=(200, 70),
                    text=f"Размер поля {size}x{size}",
-                   active_color=Color(160, 10, 50),
-                   inactive_color=Color(230, 230, 230),
+                   active_color=Color((160, 10, 50)),
+                   inactive_color=Color((230, 230, 230)),
                    function=lambda s=size: self._select_field(s))
             for y, size in zip([150, 360, 570], [9, 13, 19])
         ]
@@ -108,8 +108,8 @@ class Game:
             Button(position=Position(y, 100),
                    size=(260, 70),
                    text=f"Режим игры {mode.name}",
-                   active_color=Color(160, 10, 50),
-                   inactive_color=Color(230, 230, 230),
+                   active_color=Color((160, 10, 50)),
+                   inactive_color=Color((230, 230, 230)),
                    function=lambda m=mode.value: self._select_gamemode(m))
             for y, mode in zip([90, 370, 650], GameModes)
         ]
@@ -117,8 +117,8 @@ class Game:
         exit_button = Button(position=Position(775, 0),
                              size=(70, 70),
                              text="Выйти",
-                             active_color=Color(160, 10, 50),
-                             inactive_color=Color(230, 230, 230),
+                             active_color=Color((160, 10, 50)),
+                             inactive_color=Color((230, 230, 230)),
                              function=self.finish_game)
 
         while True:
