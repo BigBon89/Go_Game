@@ -24,12 +24,12 @@ class GameState:
         self.__board = board
 
     @property
-    def game_mode(self) -> int:
+    def game_mode(self) -> GameModes:
         """Возвращаем режим игры"""
         return self.__game_mode
 
     @game_mode.setter
-    def game_mode(self, game_mode: int) -> None:
+    def game_mode(self, game_mode: GameModes) -> None:
         """Изменяет режим игры"""
         self.__game_mode = game_mode
 
