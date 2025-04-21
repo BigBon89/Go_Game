@@ -94,25 +94,24 @@ class Game:
     def run(self) -> None:
         """Запуск игры"""
 
-        pos_y = [155, 230, 310]
         fields_buttons = [
-            Button(position=Position(765, y),
-                   size=(230, 70),
+            Button(position=Position(y, 100),
+                   size=(200, 70),
                    text=f"Размер поля {size}x{size}",
                    active_color=(160, 10, 50),
                    inactive_color=(230, 230, 230),
                    function=lambda s=size: self._select_field(s))
-            for y, size in zip(pos_y, [9, 13, 19])
+            for y, size in zip([100, 330, 560], [9, 13, 19])
         ]
 
         modes_buttons = [
-            Button(position=Position(765, y),
-                   size=(230, 70),
+            Button(position=Position(y, 100),
+                   size=(260, 70),
                    text=f"Режим игры {mode.name}",
                    active_color=(160, 10, 50),
                    inactive_color=(230, 230, 230),
                    function=lambda m=mode.value: self._select_gamemode(m))
-            for y, mode in zip(pos_y, GameModes)
+            for y, mode in zip([50, 330, 610], GameModes)
         ]
 
         exit_button = Button(position=Position(775, 0),
