@@ -8,4 +8,4 @@ class Position(NamedTuple):
     def inverted(self) -> Self:
         """Инвертирует x и y"""
 
-        return Position(self.y, self.x)
+        return Position(self.y, self.x)  # type: ignore[return-value]
