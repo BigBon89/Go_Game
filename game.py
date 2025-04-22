@@ -9,7 +9,7 @@ from game_modes import GameModes
 from game_rules import GameRules
 from game_state import GameState
 from score import Score
-from widgets.button import Button, Color
+from widgets.button import Button, Color, Size
 
 
 class Game:
@@ -96,7 +96,7 @@ class Game:
 
         fields_buttons = [
             Button(position=Position(y, 100),
-                   size=(200, 70),
+                   size=Size((200, 70)),
                    text=f"Размер поля {size}x{size}",
                    active_color=Color((160, 10, 50)),
                    inactive_color=Color((230, 230, 230)),
@@ -106,7 +106,7 @@ class Game:
 
         modes_buttons = [
             Button(position=Position(y, 100),
-                   size=(260, 70),
+                   size=Size((260, 70)),
                    text=f"Режим игры {mode.name}",
                    active_color=Color((160, 10, 50)),
                    inactive_color=Color((230, 230, 230)),
@@ -114,12 +114,13 @@ class Game:
             for y, mode in zip([90, 370, 650], GameModes)
         ]
 
-        exit_button = Button(position=Position(775, 0),
-                             size=(70, 70),
-                             text="Выйти",
-                             active_color=Color((160, 10, 50)),
-                             inactive_color=Color((230, 230, 230)),
-                             function=self.finish_game)
+        exit_button = Button(
+            position=Position(775, 0),
+            size=Size((70, 70)),
+            text="Выйти",
+            active_color=Color((160, 10, 50)),
+            inactive_color=Color((230, 230, 230)),
+            function=self.finish_game)
 
         while True:
             self._surface.fill((255, 255, 255))

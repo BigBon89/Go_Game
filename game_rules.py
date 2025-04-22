@@ -22,7 +22,8 @@ class GameRules:
     def check_click(self) -> None:
         """Ставит камень при клике на сетку"""
 
-        if not pygame.mouse.get_pressed()[0] or (not self.__state.move_first_player and self.__state.game_mode != 0):
+        if (not pygame.mouse.get_pressed()[0] or
+                (not self.__state.move_first_player and self.__state.game_mode == GameModes.computer_random)):
             return
 
         mouse_pos = Position(*pygame.mouse.get_pos())

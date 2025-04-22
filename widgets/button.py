@@ -10,13 +10,14 @@ from idrawable import IDrawable
 from widgets.text import Text
 
 Color = NewType('Color', tuple[int, int, int])
+Size = NewType('Size', tuple[int, int])
 
 
 class Button(IDrawable):
     def __init__(
             self,
             position: Position,
-            size: tuple[int, int],
+            size: Size,
             text: str,
             active_color: Color,
             inactive_color: Color,
