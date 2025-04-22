@@ -11,13 +11,13 @@ from logger import Logger
 
 class GameRules:
     def __init__(self, state: GameState, logger: Logger):
-        self.new_board: Board = Board(0)
-        self.all_board: dict[int, Board] = {9: Board(9),
-                                            13: Board(13),
-                                            19: Board(19)}
+        self.__new_board: Board = Board(0)
+        self.__all_board: dict[int, Board] = {9: Board(9),
+                                              13: Board(13),
+                                              19: Board(19)}
         self.__state = state
         self.__logger = logger
-        self.last_step = [-1, -1]
+        self._last_step = [-1, -1]
 
     def check_click(self) -> None:
         """Ставит камень при клике на сетку"""
@@ -96,10 +96,10 @@ class GameRules:
 
         if good_move[0] != -1:
             self.make_move(Position(good_move[0], good_move[1]))
-            if good_move[0] == self.last_step[0] and good_move[1] == self.last_step[1]:
+            if good_move[0] == self._last_step[0] and good_move[1] == self._last_step[1]:
                 self.random_computer_move()
-            self.last_step[0] = good_move[0]
-            self.last_step[1] = good_move[1]
+            self._last_step[0] = good_move[0]
+            self._last_step[1] = good_move[1]
             return
         self.random_computer_move()
         return
@@ -109,20 +109,20 @@ class GameRules:
         if self.__state.board.check_rock(pos):
             return 0
         self.clone_field()
-        self.new_board.add_rock(pos, move)
+        self.__new_board.add_rock(pos, move)
 
-        before = self.new_board.get_tuple_removed_stones()[move % 2]
-        self.new_board.check_rules()
-        after = self.new_board.get_tuple_removed_stones()[move % 2]
+        before = self.__new_board.get_tuple_removed_stones()[move % 2]
+        self.__new_board.check_rules()
+        after = self.__new_board.get_tuple_removed_stones()[move % 2]
 
         return after - before
 
     def clone_field(self) -> None:
         size = self.__state.board.size
-        self.new_board = self.all_board[size]
-        self.new_board.reset()
+        self.__new_board = self.__all_board[size]
+        self.__new_board.reset()
         for x in range(size):
             for y in range(size):
                 value = self.__state.board.game_field[y][x]
                 if value:
-                    self.new_board.add_rock(Position(x, y), value)
+                    self.__new_board.add_rock(Position(x, y), value)
