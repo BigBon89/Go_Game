@@ -13,7 +13,7 @@ class Save:
                  logger: Logger) -> None:
         self._state = state
         self._logger = logger
-        self._history: Step = []
+        self._history: Step = Step([])
         self._number_move: int = 0
 
     def add_step_player(self, position: Position, move: int) -> None:
@@ -37,8 +37,8 @@ class Save:
             self._state.board.check_rules()
         self._number_move -= 1
         self._state.move_first_player = True if not self._state.move_first_player else False
-        if self._state.game_mode != "hotseat" and count == 0:
-            count+=1
+        if self._state.game_mode.value != 0 and count == 0:
+            count += 1
             self.step_back(count)
         self._logger.info("Step back")
 

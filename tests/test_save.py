@@ -1,29 +1,37 @@
-from typing import Self
-
 import pytest
 
 from fundamental.board import Board
+from fundamental.logger import Logger
 from game.game_state import GameState
 from position import Position
 from save import Save
 
 
 @pytest.fixture()
-def board() -> 'Board':
+def logger() -> Logger:
+    logger = Logger(log_file="test.log")
+    return logger
+
+
+@pytest.fixture()
+def board() -> Board:
     board = Board(9)
     return board
 
+
 @pytest.fixture()
-def state() -> 'GameState':
+def state() -> GameState:
     state = GameState()
     return state
 
+
 @pytest.fixture()
-def save(state: GameState) -> 'Save':
-    save = Save(state)
+def save(state: GameState, logger: Logger) -> Save:
+    save = Save(state, logger)
     return save
 
-def test_step_back(state: GameState, board: Board, save: Save):
+
+def test_step_back(state: GameState, board: Board, save: Save) -> None:
     state.board = board
     state.board.add_rock(Position(1, 1), 1)
     save.add_step_player(Position(1, 1), 1)
@@ -38,7 +46,7 @@ def test_step_back(state: GameState, board: Board, save: Save):
     assert state.board.game_field[4][1] == 0
 
 
-def test_step_next(state: GameState, board: Board, save: Save):
+def test_step_next(state: GameState, board: Board, save: Save) -> None:
     state.board = board
     state.board.add_rock(Position(1, 1), 1)
     save.add_step_player(Position(1, 1), 1)
