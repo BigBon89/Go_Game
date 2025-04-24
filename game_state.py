@@ -1,6 +1,9 @@
+import time
+
 import pygame
 
 from board import Board
+from clock import Clock
 from game_modes import GameModes
 
 CHARACTERISTIC_BOARD = 650
@@ -14,8 +17,6 @@ class GameState:
         self.__move_first_player = True
         self.__board = Board(0)
         self.__figure_size = 0
-        self._countdown_seconds = 1800
-        self._start_ticks = pygame.time.get_ticks()
 
     @property
     def board(self) -> Board:
@@ -67,14 +68,3 @@ class GameState:
 
         self.__cell_board = CHARACTERISTIC_BOARD // (size - 1)
         self.__figure_size = int(self.__cell_board * 0.9)
-
-    def start_timer(self, seconds: int):
-        """Запуск таймера"""
-        self._countdown_seconds = seconds
-        self._start_ticks = pygame.time.get_ticks()
-
-    def timer(self) -> int:
-        """Возвращает оставшееся время в секундах"""
-        remaining = pygame.time.get_ticks() - self._start_ticks
-        remaining_sec = self._countdown_seconds - (remaining // 1000)
-        return max(0, remaining_sec)

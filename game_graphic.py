@@ -1,17 +1,26 @@
 import pygame
 from pygame import Surface
 
+from clock import Clock
 from game_state import GameState
 from score import Score
 
 
 class GameGraphic:
-    def __init__(self, state: GameState, score: Score, filename1: str, filename2: str) -> None:
+    def __init__(self,
+                 state: GameState,
+                 score: Score,
+                 filename1: str,
+                 filename2: str,
+                 global_time: Clock,
+                 local_time: Clock) -> None:
         self.__state = state
         self._score = score
         self._font = pygame.font.Font("assets/Verdana.ttf", 40)
         self._rock = pygame.image.load(filename1)
         self._monster = pygame.image.load(filename2)
+        self.global_time = global_time
+        self.local_time = local_time
 
         self._stone_black: Surface
         self._stone_white: Surface
@@ -22,7 +31,8 @@ class GameGraphic:
         self._draw_board(surface)
         self._draw_stones(surface)
         self._draw_score_table(surface)
-        self._draw_time_table(surface)
+        self._draw_local_time_table(surface)
+        self._draw_global_time_table(surface)
 
     def _draw_board(self, surface: Surface) -> None:
         """Отрисовка игрового поля"""
@@ -88,10 +98,22 @@ class GameGraphic:
             )
             offset += 35
 
-    def _draw_time_table(self, surface: Surface):
-        remaining_seconds = self.__state.timer()
-        timer_text = self._font.render(f"Время: {remaining_seconds // 60} минут {remaining_seconds % 60} секунд",
+    def _draw_local_time_table(self, surface: Surface):
+        """Вырисовка обратного отсчета для таймера"""
+
+        remaining_seconds = self.local_time.reamining_timer()
+        timer_text = self._font.render(f"{remaining_seconds} s",
                                        True,
                                        (0, 0, 0)
                                        )
-        surface.blit(timer_text, (20, 725))
+        surface.blit(timer_text, (905, 675))
+
+    def _draw_global_time_table(self, surface: Surface):
+        """Время игры"""
+
+        remaining_seconds = self.global_time.reamining_timer()
+        timer_text = self._font.render(f"{remaining_seconds // 60} m {remaining_seconds % 60} s",
+                                       True,
+                                       (0, 0, 0)
+                                       )
+        surface.blit(timer_text, (790, 725))

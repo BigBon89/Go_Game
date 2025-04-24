@@ -3,6 +3,7 @@ import random
 import pygame
 
 from board import Board
+from clock import Clock
 from position import Position
 from game_modes import GameModes
 from game_state import GameState
@@ -10,7 +11,7 @@ from logger import Logger
 
 
 class GameRules:
-    def __init__(self, state: GameState, logger: Logger):
+    def __init__(self, state: GameState, logger: Logger, clock: Clock):
         self.__new_board: Board = Board(0)
         self.__all_board: dict[int, Board] = {9: Board(9),
                                               13: Board(13),
@@ -18,6 +19,7 @@ class GameRules:
         self.__state = state
         self.__logger = logger
         self._last_step = [-1, -1]
+        self._clock = clock
 
     def check_click(self) -> None:
         """Ставит камень при клике на сетку"""
@@ -65,7 +67,7 @@ class GameRules:
             f"({pos.x}, {pos.y})"
         )
         self.__state.move_first_player = not self.__state.move_first_player
-
+        self._clock.reset_turn_timer()
         return True
 
     def smart_computer_move(self) -> None:

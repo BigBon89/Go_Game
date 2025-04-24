@@ -2,6 +2,7 @@ import pygame
 import pygame.freetype
 
 from board import Board
+from clock import Clock
 from logger import Logger
 from position import Position
 from game_graphic import GameGraphic
@@ -27,12 +28,17 @@ class Game:
 
         self._score = Score(self._logger)
         self.__state = GameState()
+        self._global_time = Clock(1800)
+        self._local_clock = Clock(30)
         self._rules = GameRules(state=self.__state,
-                                logger=self._logger)
+                                logger=self._logger,
+                                clock = self._local_clock)
         self._graphic = GameGraphic(state=self.__state,
                                     score=self._score,
                                     filename1="image/rock.png",
-                                    filename2="image/monster.png"
+                                    filename2="image/monster.png",
+                                    global_time=self._global_time,
+                                    local_time=self._local_clock
                                     )
 
     def _poll_events(self) -> None:
@@ -132,6 +138,8 @@ class Game:
             elif self._initialization_step == 1:
                 for e in modes_buttons:
                     e.draw(self._surface)
+                self._local_clock.reset_turn_timer()
+                self._global_time.reset_turn_timer()
             elif self._initialization_step == 2:
                 self._rules.check_click()
                 if self.__state.game_mode == GameModes.computer_random:
