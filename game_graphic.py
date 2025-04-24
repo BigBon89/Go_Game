@@ -1,3 +1,5 @@
+from typing import Callable, Any
+
 import pygame
 from pygame import Surface
 
@@ -13,14 +15,16 @@ class GameGraphic:
                  filename1: str,
                  filename2: str,
                  global_time: Clock,
-                 local_time: Clock) -> None:
+                 local_time: Clock,
+                 function: [Callable[..., Any]] = None) -> None:
         self.__state = state
         self._score = score
         self._font = pygame.font.Font("assets/Verdana.ttf", 40)
         self._rock = pygame.image.load(filename1)
         self._monster = pygame.image.load(filename2)
-        self.global_time = global_time
-        self.local_time = local_time
+        self._global_time = global_time
+        self._local_time = local_time
+        self.function = function
 
         self._stone_black: Surface
         self._stone_white: Surface
@@ -101,7 +105,8 @@ class GameGraphic:
     def _draw_local_time_table(self, surface: Surface):
         """Вырисовка обратного отсчета для таймера"""
 
-        remaining_seconds = self.local_time.reamining_timer()
+
+        remaining_seconds = self._local_time.reamining_timer()
         timer_text = self._font.render(f"{remaining_seconds} s",
                                        True,
                                        (0, 0, 0)
@@ -111,9 +116,11 @@ class GameGraphic:
     def _draw_global_time_table(self, surface: Surface):
         """Время игры"""
 
-        remaining_seconds = self.global_time.reamining_timer()
+        remaining_seconds = self._global_time.reamining_timer()
         timer_text = self._font.render(f"{remaining_seconds // 60} m {remaining_seconds % 60} s",
                                        True,
                                        (0, 0, 0)
                                        )
         surface.blit(timer_text, (790, 725))
+        if self._global_time.is_time_end():
+            self.function()

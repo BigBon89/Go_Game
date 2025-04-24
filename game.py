@@ -38,7 +38,8 @@ class Game:
                                     filename1="image/rock.png",
                                     filename2="image/monster.png",
                                     global_time=self._global_time,
-                                    local_time=self._local_clock
+                                    local_time=self._local_clock,
+                                    function=self.exit
                                     )
 
     def _poll_events(self) -> None:
