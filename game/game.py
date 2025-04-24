@@ -10,6 +10,7 @@ from game.game_modes import GameModes
 from game.game_rules import GameRules
 from game.game_state import GameState
 from fundamental.score import Score
+from save import Save
 from widgets.button import Button, Color, Size
 
 
@@ -30,9 +31,11 @@ class Game:
         self.__state = GameState()
         self._global_time = Clock(1800)
         self._local_clock = Clock(30)
+        self._save = Save(self.__state, self._logger)
         self._rules = GameRules(state=self.__state,
                                 logger=self._logger,
-                                clock=self._local_clock)
+                                clock=self._local_clock,
+                                save=self._save)
         self._graphic = GameGraphic(state=self.__state,
                                     score=self._score,
                                     filename1="image/rock.png",
@@ -168,6 +171,16 @@ class Game:
             for y, count in zip([150, 360, 570], [0, 3, 9])
         ]
 
+        next_back_button = [
+            Button(position=Position(y, 75),
+                   size=Size((70, 70)),
+                   text="Back" if mode == 0 else "Next",
+                   active_color=Color((160, 10, 50)),
+                   inactive_color=Color((230, 230, 230)),
+                   function=(self._save.step_back if mode == 0 else self._save.step_next))
+            for y, mode in zip([775, 850], [0, 1])
+        ]
+
         exit_button = Button(
             position=Position(775, 0),
             size=Size((70, 70)),
@@ -192,12 +205,13 @@ class Game:
                 self._local_clock.reset_turn_timer()
                 self._global_time.reset_turn_timer()
             elif self._initialization_step == 3:
+                for e in next_back_button:
+                    e.draw(self._surface)
                 self._rules.check_click()
                 if self.__state.game_mode == GameModes.computer_random:
                     self._rules.random_computer_move()
                 elif self.__state.game_mode == GameModes.computer_smart:
                     self._rules.smart_computer_move()
-
                 self._graphic.draw(self._surface)
                 exit_button.draw(self._surface)
                 self.__state.board.check_rules()

@@ -8,10 +8,15 @@ from position import Position
 from game.game_modes import GameModes
 from game.game_state import GameState
 from fundamental.logger import Logger
+from save import Save
 
 
 class GameRules:
-    def __init__(self, state: GameState, logger: Logger, clock: Clock):
+    def __init__(self,
+                 state: GameState,
+                 logger: Logger,
+                 clock: Clock,
+                 save: Save):
         self.__new_board: Board = Board(0)
         self.__all_board: dict[int, Board] = {9: Board(9),
                                               13: Board(13),
@@ -20,6 +25,7 @@ class GameRules:
         self.__logger = logger
         self._last_step = [-1, -1]
         self._clock = clock
+        self._save = save
 
     def check_click(self) -> None:
         """Ставит камень при клике на сетку"""
@@ -61,6 +67,7 @@ class GameRules:
             return False
         player_id = int(self.__state.move_first_player) + 1
         self.__state.board.add_rock(pos, player_id)
+        self._save.add_step_player(pos, player_id)
         self.__state.board.check_rules()
         self.__logger.info(
             f"The player {int(self.__state.move_first_player) + 1} made a move on the position "

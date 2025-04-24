@@ -122,5 +122,5 @@ class GameGraphic:
                                        (0, 0, 0)
                                        )
         surface.blit(timer_text, (790, 725))
-        if self._global_time.is_time_end():
-            self.function()
+        # if self._global_time.is_time_end() and self.function:
+        #     self.function()
