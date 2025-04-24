@@ -1,5 +1,3 @@
-from typing import Optional
-
 import pygame
 from pygame import Surface
 
@@ -15,8 +13,8 @@ class GameGraphic:
         self._rock = pygame.image.load(filename1)
         self._monster = pygame.image.load(filename2)
 
-        self._stone_black: Optional[Surface] = None
-        self._stone_white: Optional[Surface] = None
+        self._stone_black: Surface
+        self._stone_white: Surface
 
     def draw(self, surface: Surface) -> None:
         """Отрисовка игрового поля, камней, таблицы рекордов"""
@@ -24,6 +22,7 @@ class GameGraphic:
         self._draw_board(surface)
         self._draw_stones(surface)
         self._draw_score_table(surface)
+        self._draw_time_table(surface)
 
     def _draw_board(self, surface: Surface) -> None:
         """Отрисовка игрового поля"""
@@ -88,3 +87,11 @@ class GameGraphic:
                 dest=(770, offset)
             )
             offset += 35
+
+    def _draw_time_table(self, surface: Surface):
+        remaining_seconds = self.__state.timer()
+        timer_text = self._font.render(f"Время: {remaining_seconds // 60} минут {remaining_seconds % 60} секунд",
+                                       True,
+                                       (0, 0, 0)
+                                       )
+        surface.blit(timer_text, (20, 725))
