@@ -32,7 +32,7 @@ class Game:
         self._local_clock = Clock(30)
         self._rules = GameRules(state=self.__state,
                                 logger=self._logger,
-                                clock = self._local_clock)
+                                clock=self._local_clock)
         self._graphic = GameGraphic(state=self.__state,
                                     score=self._score,
                                     filename1="image/rock.png",
@@ -98,6 +98,43 @@ class Game:
         self._logger.info("Close Game")
         exit()
 
+    def _odds(self, count: int) -> None:
+        """Устанавливает начальные камни для форы на доску."""
+
+        if count == 0:
+            self._initialization_step = 3
+            return
+        size = self.__state.board.size
+        odds_table = [[0] * size for _ in range(size)]
+        add_list = []
+        if size == 9:
+            if count == 3:
+                add_list = [(2, 2), (4, 4), (6, 6)]
+            else:
+                add_list = [(2, 2), (2, 4), (2, 6),
+                            (4, 2), (4, 4), (4, 6),
+                            (6, 2), (6, 4), (6, 6)]
+        if size == 13:
+            if count == 3:
+                add_list = [(3, 3), (6, 9), (9, 11)]
+            else:
+                add_list = [(3, 3), (9, 3), (6, 3),
+                            (3, 9), (9, 9), (6, 9),
+                            (3, 11), (9, 11), (6, 11)]
+        if size == 19:
+            if count == 3:
+                add_list = [(3, 3), (9, 9), (15, 15)]
+            else:
+                add_list = [(3, 3), (9, 3), (15, 3),
+                            (3, 9), (9, 9), (15, 9),
+                            (3, 15), (9, 15), (15, 15)]
+        for i in range(count):
+            position = add_list[i]
+            odds_table[position[0]][position[1]] = 2
+        self.__state.board.game_field = odds_table
+        self._logger.info(f" Handicap set: {count} stones")
+        self._initialization_step = 3
+
     def run(self) -> None:
         """Запуск игры"""
 
@@ -121,6 +158,16 @@ class Game:
             for y, mode in zip([90, 370, 650], GameModes)
         ]
 
+        head_start = [
+            Button(position=Position(y, 100),
+                   size=Size((200, 70)),
+                   text=f"Фора в {count} камней",
+                   active_color=Color((160, 10, 50)),
+                   inactive_color=Color((230, 230, 230)),
+                   function=lambda c=count: self._odds(c))
+            for y, count in zip([150, 360, 570], [0, 3, 9])
+        ]
+
         exit_button = Button(
             position=Position(775, 0),
             size=Size((70, 70)),
@@ -139,9 +186,12 @@ class Game:
             elif self._initialization_step == 1:
                 for e in modes_buttons:
                     e.draw(self._surface)
+            elif self._initialization_step == 2:
+                for e in head_start:
+                    e.draw(self._surface)
                 self._local_clock.reset_turn_timer()
                 self._global_time.reset_turn_timer()
-            elif self._initialization_step == 2:
+            elif self._initialization_step == 3:
                 self._rules.check_click()
                 if self.__state.game_mode == GameModes.computer_random:
                     self._rules.random_computer_move()
