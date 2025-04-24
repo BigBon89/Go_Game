@@ -5,7 +5,7 @@ import pygame.freetype
 from pygame import Surface
 from typing import Callable, Any, Optional, NewType
 
-from board import Position
+from position import Position
 from idrawable import IDrawable
 from widgets.text import Text
 

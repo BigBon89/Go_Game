@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from logger import Logger
+from fundamental.logger import Logger
 
 
 class Score:

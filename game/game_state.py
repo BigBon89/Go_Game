@@ -1,10 +1,5 @@
-import time
-
-import pygame
-
-from board import Board
-from clock import Clock
-from game_modes import GameModes
+from fundamental.board import Board
+from game.game_modes import GameModes
 
 CHARACTERISTIC_BOARD = 650
 

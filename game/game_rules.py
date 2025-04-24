@@ -2,12 +2,12 @@ import random
 
 import pygame
 
-from board import Board
-from clock import Clock
+from fundamental.board import Board
+from fundamental.clock import Clock
 from position import Position
-from game_modes import GameModes
-from game_state import GameState
-from logger import Logger
+from game.game_modes import GameModes
+from game.game_state import GameState
+from fundamental.logger import Logger
 
 
 class GameRules:

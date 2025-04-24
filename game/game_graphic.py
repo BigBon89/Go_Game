@@ -3,9 +3,9 @@ from typing import Callable, Any
 import pygame
 from pygame import Surface
 
-from clock import Clock
-from game_state import GameState
-from score import Score
+from fundamental.clock import Clock
+from game.game_state import GameState
+from fundamental.score import Score
 
 
 class GameGraphic:

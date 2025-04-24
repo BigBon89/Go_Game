@@ -1,15 +1,15 @@
 import pygame
 import pygame.freetype
 
-from board import Board
-from clock import Clock
-from logger import Logger
+from fundamental.board import Board
+from fundamental.clock import Clock
+from fundamental.logger import Logger
+from game.game_graphic import GameGraphic
 from position import Position
-from game_graphic import GameGraphic
-from game_modes import GameModes
-from game_rules import GameRules
-from game_state import GameState
-from score import Score
+from game.game_modes import GameModes
+from game.game_rules import GameRules
+from game.game_state import GameState
+from fundamental.score import Score
 from widgets.button import Button, Color, Size
 
 
