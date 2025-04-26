@@ -134,6 +134,7 @@ class Game:
         for i in range(count):
             position = add_list[i]
             odds_table[position[0]][position[1]] = 2
+            self._save.add_step_player(Position(position[0], position[1]), 2)
         self.__state.board.game_field = odds_table
         self._logger.info(f" Handicap set: {count} stones")
         self._initialization_step = 3

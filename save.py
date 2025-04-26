@@ -36,7 +36,7 @@ class Save:
             game_field[step_first.x][step_first.y] = move
             self._state.board.check_rules()
         self._number_move -= 1
-        self._state.move_first_player = True if not self._state.move_first_player else False
+        self._state.move_first_player = not self._state.move_first_player
         if self._state.game_mode.value != 0 and count == 0:
             count += 1
             self.step_back(count)
