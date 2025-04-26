@@ -1,6 +1,6 @@
 import pytest
 
-from board import Board, Position
+from fundamental.board import Board, Position
 
 
 @pytest.fixture()
